@@ -199,7 +199,7 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
 <section class="screen on" id="home">
   <div class="top">
         <h1>Song Teacher 🎤<small>Hi Jiana! Ready to sing?</small></h1>
-    <button class="icon-btn" onclick="openGrown()" aria-label="Grown-ups">⚙️</button>
+    <button class="icon-btn" onclick="openGrown()" aria-label="Add songs">➕</button>
   </div>
   <div class="hero">
     <div class="ring" id="ring"></div>
@@ -243,10 +243,10 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
 <section class="screen" id="grown">
   <div class="top">
     <button class="icon-btn" onclick="go('home')">←</button>
-    <h1>Grown-ups corner</h1>
+    <h1>My songs 🎵</h1>
   </div>
   <div class="card">
-    <h3>➕ Add / edit a song</h3>
+    <h3>➕ Add your favourite song</h3>
     <input type="hidden" id="f-id"/>
     <label>Song name</label>
     <input id="f-title" placeholder="e.g. Shake It Off"/>
@@ -254,7 +254,7 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
     <input id="f-artist" placeholder="e.g. Taylor Swift"/>
     <label>Pick a sticker</label>
     <div class="emo-pick" id="f-emo"></div>
-    <label>Lyrics (one line per line — paste from the album booklet or a lyrics site)</label>
+    <label>Song words — copy them from Google (type the song name + "lyrics") and paste here</label>
     <textarea id="f-lyrics" placeholder="Paste lyrics here…&#10;Blank lines are skipped.&#10;Repeated chorus lines are kept once."></textarea>
     <p class="hint">Tip: start with just the chorus (6–10 lines). Kids learn faster in small chunks.</p>
     <label>YouTube link (optional — to play the original)</label>
@@ -265,11 +265,12 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
     </div>
   </div>
   <div class="card">
-    <h3>🎵 Jiana's songs</h3>
+    <h3>🎵 Your songs</h3>
     <div id="g-list"></div>
   </div>
-  <div class="card">
-    <h3>🎯 Daily goal</h3>
+  <button class="btn btn-g full" id="parent-btn" onclick="openParent()">🔒 Parent settings</button>
+  <div class="card" id="parent-card" style="display:none">
+    <h3>🎯 Daily goal (parents)</h3>
     <label>Stars needed to unlock the game</label>
     <select id="g-goal" onchange="setGoal(this.value)">
       <option>10</option><option>15</option><option>20</option><option>30</option><option>40</option>
@@ -396,7 +397,7 @@ function renderHome(){
   else{rw.className='reward';rw.innerHTML=`<div class="em">🔒</div><div><h3>Balloon Pop game</h3><p>Unlocks when you earn ${D.goal} stars today</p></div>`;}
   const card=s=>{const st=songStars(s.id);return `<button class="song" style="background:${s.color}" onclick="openSong('${s.id}')"><span class="em">${s.emoji}</span>${st?`<span class="badge">⭐ ${st}</span>`:''}<h4>${esc(s.title)}</h4><small>${esc(s.artist||'')}</small></button>`;};
   document.getElementById('my-songs').innerHTML=D.songs.map(card).join('')+
-    `<button class="song add-song" onclick="openGrown()"><span class="em">➕</span><h4>Add my favourite song</h4><small style="color:var(--text3)">ask a grown-up</small></button>`;
+    `<button class="song add-song" onclick="openGrown()"><span class="em">➕</span><h4>Add my favourite song</h4><small style="color:var(--text3)">paste the words & sing!</small></button>`;
   document.getElementById('tune-songs').innerHTML=TUNES.map(card).join('');
   renderSchool();
 }
@@ -810,8 +811,10 @@ function confetti(){const e=['🎉','⭐','🎵','💜','🌟','🎶'];for(let i
 /* ════════════ GROWN-UPS ════════════ */
 function gate(){const a=11+(Math.random()*8|0),b=12+(Math.random()*7|0);const r=prompt(`Grown-ups only 🙂\nWhat is ${a} × ${b}?`);return r!==null&&+r===a*b;}
 let pickedEmo=EMOJIS[0];
+function openParent(){if(!sessionStorage.getItem('gu')){if(!gate()){toast('Parents only 🙂');return;}sessionStorage.setItem('gu','1');}
+  document.getElementById('parent-card').style.display='block';document.getElementById('parent-btn').style.display='none';}
 function openGrown(){
-  if(!sessionStorage.getItem('gu')){if(!gate()){toast('Ask a grown-up to help!');return;}sessionStorage.setItem('gu','1');}
+  const pc=document.getElementById('parent-card');pc.style.display=sessionStorage.getItem('gu')?'block':'none';document.getElementById('parent-btn').style.display=sessionStorage.getItem('gu')?'none':'';
   document.getElementById('g-goal').value=D.goal;document.getElementById('g-all').checked=!!D.allOpen;loadVoices();renderEmo();renderGList();go('grown');
 }
 function renderEmo(){document.getElementById('f-emo').innerHTML=EMOJIS.map(e=>`<button class="${e===pickedEmo?'sel':''}" onclick="pickedEmo='${e}';renderEmo()">${e}</button>`).join('');}
