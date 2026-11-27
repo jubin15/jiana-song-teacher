@@ -179,14 +179,30 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
 .confetti{position:fixed;top:-20px;font-size:22px;pointer-events:none;animation:fall linear forwards;z-index:50;}
 @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
 
-/* game */
-.game{position:fixed;inset:0;background:linear-gradient(#bde3ff,#fbe3ff);z-index:40;overflow:hidden;touch-action:manipulation;}
-.game .hud{position:absolute;top:calc(var(--safe-top) + 12px);left:16px;right:16px;display:flex;justify-content:space-between;font-weight:900;font-size:20px;z-index:2;}
-.balloon{position:absolute;bottom:-120px;width:70px;height:86px;border-radius:50% 50% 48% 48%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;animation:rise linear forwards;}
-.balloon::after{content:'';position:absolute;bottom:-30px;left:50%;width:2px;height:30px;background:rgba(0,0,0,.25);}
-@keyframes rise{to{transform:translateY(calc(-100vh - 200px))}}
-.boom{position:absolute;font-size:40px;pointer-events:none;animation:boom .4s forwards;}
-@keyframes boom{to{transform:scale(2);opacity:0}}
+/* concert */
+.pick{display:flex;flex-wrap:wrap;gap:6px;}
+.pick button{padding:9px 12px;border-radius:12px;background:var(--bg2);font-weight:800;font-size:13px;color:var(--text2);}
+.pick button span{margin-right:4px;}
+.pick button.on{background:var(--acc);color:#fff;}
+.stage-ov{position:fixed;inset:0;z-index:40;background:#120822;color:#fff;overflow:hidden;display:flex;flex-direction:column;padding:calc(var(--safe-top) + 12px) 16px calc(var(--safe-bot) + 18px);}
+.spot{--lv:0;position:absolute;inset:-20%;background:radial-gradient(circle at 50% 30%,rgba(255,95,162,calc(.25 + var(--lv)*.5)) 0,rgba(123,63,228,calc(.2 + var(--lv)*.4)) calc(22% + var(--lv)*18%),transparent 60%);transition:background .1s;pointer-events:none;}
+.spot::after{content:'';position:absolute;left:10%;right:10%;top:0;height:60%;background:conic-gradient(from 160deg at 50% 0,transparent 0 10deg,rgba(255,255,255,.06) 10deg 40deg,transparent 40deg);}
+.s-top{position:relative;display:flex;justify-content:space-between;align-items:center;font-weight:900;}
+.s-top .icon-btn{background:rgba(255,255,255,.12);color:#fff;border:none;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff3b5c;margin-right:4px;animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:.2}}
+.s-title{position:relative;text-align:center;font-weight:900;font-size:18px;margin-top:10px;opacity:.9;}
+.s-lyrics{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:18px;}
+.s-now{font-size:30px;font-weight:900;line-height:1.3;text-shadow:0 2px 16px rgba(255,95,162,.6);}
+.s-now span.on{color:var(--sun);}
+.s-next{font-size:17px;font-weight:700;opacity:.45;}
+.count{position:absolute;inset:0;display:grid;place-items:center;font-size:120px;font-weight:900;background:rgba(18,8,34,.7);z-index:2;}
+.crowd{position:relative;display:flex;justify-content:space-around;font-size:30px;margin-bottom:12px;}
+.crowd span{display:inline-block;}
+.crowd.hype span{animation:jump .5s infinite alternate;}
+@keyframes jump{to{transform:translateY(-14px) scale(1.15)}}
+.s-btns{position:relative;display:flex;gap:10px;}
+.s-btns>*{flex:1;}
 .toast{position:fixed;left:50%;bottom:calc(var(--safe-bot) + 20px);transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;z-index:60;max-width:90%;text-align:center;}
 .spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.8s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -239,6 +255,15 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
   <div id="p-body"></div>
 </section>
 
+<!-- CONCERT -->
+<section class="screen" id="concert">
+  <div class="top">
+    <button class="icon-btn" onclick="if(prevStop){prevStop();prevStop=null;}go('home')">←</button>
+    <h1>Concert stage 🎤<small>Sing it, record it, share it!</small></h1>
+  </div>
+  <div id="c-body"></div>
+</section>
+
 <!-- GROWN UPS -->
 <section class="screen" id="grown">
   <div class="top">
@@ -271,7 +296,7 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
   <button class="btn btn-g full" id="parent-btn" onclick="openParent()">🔒 Parent settings</button>
   <div class="card" id="parent-card" style="display:none">
     <h3>🎯 Daily goal (parents)</h3>
-    <label>Stars needed to unlock the game</label>
+    <label>Stars needed to open the concert stage</label>
     <select id="g-goal" onchange="setGoal(this.value)">
       <option>10</option><option>15</option><option>20</option><option>30</option><option>40</option>
     </select>
@@ -279,7 +304,7 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
     <select id="g-voice" onchange="setVoice(this.value)"></select>
     <div class="row" style="margin-top:12px">
       <button class="btn btn-g btn-sm" onclick="speak('Hello Jiana! Let\'s sing together!')">🔊 Test voice</button>
-      <button class="btn btn-sun btn-sm" onclick="unlockToday()">🔓 Unlock game today</button>
+      <button class="btn btn-sun btn-sm" onclick="unlockToday()">🔓 Open stage today</button>
     </div>
     <label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="g-all" style="width:auto" onchange="D.allOpen=this.checked;save()"/> Open all voice-school lessons (skip the order)</label>
   </div>
@@ -373,7 +398,7 @@ function award(songId,mode,line,stars){
   const pm=D.prog[songId][mode]=D.prog[songId][mode]||{};
   pm[line]=Math.max(pm[line]||0,stars);
   const d=day(),key=songId+'|'+mode+'|'+line,prev=d.best[key]||0;   // only today's improvement counts
-  if(stars>prev){const was=goalMet();d.stars+=stars-prev;d.best[key]=stars;if(!was&&goalMet())setTimeout(()=>{confetti();toast('🎉 Goal done! Balloon game unlocked!');},600);}
+  if(stars>prev){const was=goalMet();d.stars+=stars-prev;d.best[key]=stars;if(!was&&goalMet())setTimeout(()=>{confetti();toast('🎉 Goal done! Concert stage is open! 🎤');},600);}
   save();
 }
 
@@ -389,12 +414,12 @@ function renderHome(){
   document.getElementById('ring').innerHTML=`<svg width="86" height="86"><circle cx="43" cy="43" r="38" stroke="rgba(255,255,255,.25)" stroke-width="9" fill="none"/><circle cx="43" cy="43" r="38" stroke="#ffc93c" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" style="transition:stroke-dashoffset .6s"/></svg><b><div>${d.stars}<span>of ${D.goal} ⭐</span></div></b>`;
   const left=Math.max(0,D.goal-d.stars);
   document.getElementById('hero-h').textContent=goalMet()?'Superstar day! 🌟':d.stars?'Keep going!':'Let\'s earn stars!';
-  document.getElementById('hero-p').textContent=goalMet()?'You finished today\'s practice.':`${left} more star${left===1?'':'s'} to unlock the balloon game`;
+  document.getElementById('hero-p').textContent=goalMet()?'You finished today\'s practice.':`${left} more star${left===1?'':'s'} to open the concert stage`;
   const mins=Math.round(d.secs/60),st=streak();
   document.getElementById('hero-chips').innerHTML=`<span class="chip">🔥 ${st} day streak</span><span class="chip">⏱ ${mins} min today</span>`;
   const rw=document.getElementById('reward');
-  if(goalMet()){rw.className='reward open';rw.innerHTML=`<div class="em">🎈</div><div><h3>Balloon Pop is open!</h3><p>Pop balloons, play music notes</p></div><button class="btn btn-sun btn-sm go" onclick="startGame()">Play</button>`;}
-  else{rw.className='reward';rw.innerHTML=`<div class="em">🔒</div><div><h3>Balloon Pop game</h3><p>Unlocks when you earn ${D.goal} stars today</p></div>`;}
+  if(goalMet()){rw.className='reward open';rw.innerHTML=`<div class="em">🎤</div><div><h3>Concert stage is open!</h3><p>Sing with a band, record it, send to family</p></div><button class="btn btn-sun btn-sm go" onclick="openConcert()">Go!</button>`;}
+  else{rw.className='reward';rw.innerHTML=`<div class="em">🔒</div><div><h3>Concert stage</h3><p>Opens when you earn ${D.goal} stars today</p></div>`;}
   const card=s=>{const st=songStars(s.id);return `<button class="song" style="background:${s.color}" onclick="openSong('${s.id}')"><span class="em">${s.emoji}</span>${st?`<span class="badge">⭐ ${st}</span>`:''}<h4>${esc(s.title)}</h4><small>${esc(s.artist||'')}</small></button>`;};
   document.getElementById('my-songs').innerHTML=D.songs.map(card).join('')+
     `<button class="song add-song" onclick="openGrown()"><span class="em">➕</span><h4>Add my favourite song</h4><small style="color:var(--text3)">paste the words & sing!</small></button>`;
@@ -784,28 +809,165 @@ function loop(){
   if(T.hold>=T.need)advanceSyl();
 }
 
-/* ════════════ REWARD GAME ════════════ */
-function startGame(){
-  if(!goalMet()){toast('🔒 Earn today\'s stars first!');return;}
-  const g=document.createElement('div');g.className='game';
-  g.innerHTML=`<div class="hud"><span id="g-score">🎈 0</span><span id="g-time">⏱ 45</span><button class="icon-btn" id="g-x">✕</button></div>`;
-  document.body.appendChild(g);
-  const scale=[60,62,64,65,67,69,71,72,74,76];let score=0,left=45;
-  const spawn=()=>{const b=document.createElement('div');b.className='balloon';
-    const n=scale[Math.random()*scale.length|0];b.style.background=COLORS[Math.random()*COLORS.length|0];
-    b.style.left=(5+Math.random()*75)+'%';b.style.animationDuration=(4+Math.random()*3)+'s';
-    b.textContent=['C','D','E','F','G','A','B'][n%12===0?0:[0,2,4,5,7,9,11].indexOf(n%12)];
-    b.onpointerdown=e=>{tone(n,.5);score++;document.getElementById('g-score').textContent='🎈 '+score;
-      const bm=document.createElement('div');bm.className='boom';bm.textContent='💥';bm.style.left=e.clientX-20+'px';bm.style.top=e.clientY-20+'px';g.appendChild(bm);setTimeout(()=>bm.remove(),400);b.remove();};
-    b.addEventListener('animationend',()=>b.remove());g.appendChild(b);};
-  const sp=setInterval(spawn,650),tm=setInterval(()=>{left--;document.getElementById('g-time').textContent='⏱ '+left;if(left<=0)end();},1000);
-  function end(){clearInterval(sp);clearInterval(tm);g.querySelectorAll('.balloon').forEach(b=>b.remove());
-    const best=D.best=Math.max(D.best||0,score);save();
-    const r=document.createElement('div');r.className='party';r.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;';
-    r.innerHTML=`<div class="big">🎈</div><h2>${score} pops!</h2><p>Best ever: ${best}</p><div style="margin:20px auto 0;display:grid;gap:10px;width:220px"><button class="btn btn-sun" id="g-again">Play again</button><button class="btn btn-g" id="g-done">Done</button></div>`;
-    g.appendChild(r);r.querySelector('#g-again').onclick=()=>{g.remove();startGame();};r.querySelector('#g-done').onclick=()=>g.remove();}
-  g.querySelector('#g-x').onclick=()=>{clearInterval(sp);clearInterval(tm);g.remove();};
+/* ════════════ CONCERT MODE ════════════ */
+let CS={song:null,style:''};
+function openConcert(){
+  if(!goalMet()){toast('🔒 Earn today\'s stars to open the stage!');return;}
+  stopAll();go('concert');renderConcertPick();
 }
+function concertStyles(s){return s&&s.tune?[['guide','🎹 Guide tune'],['drums','🥁 Just drums']]:[['pop','🎸 Pop band'],['soft','🌙 Soft piano'],['drums','🥁 Just drums']];}
+function renderConcertPick(){
+  const songs=[...D.songs,...TUNES];
+  if(!CS.song||!songs.find(s=>s.id===CS.song))CS.song=songs[0].id;
+  const s=getSong(CS.song),st=concertStyles(s);if(!st.find(x=>x[0]===CS.style))CS.style=st[0][0];
+  document.getElementById('c-body').innerHTML=`
+   <div class="card"><h3>1. Pick your song</h3><div class="pick">${songs.map(x=>`<button class="${x.id===CS.song?'on':''}" onclick="CS.song='${x.id}';renderConcertPick()"><span>${x.emoji}</span>${esc(x.title)}</button>`).join('')}</div></div>
+   <div class="card"><h3>2. Pick your band</h3><div class="seg">${st.map(([k,l])=>`<button class="${k===CS.style?'on':''}" onclick="CS.style='${k}';renderConcertPick()">${l}</button>`).join('')}</div>
+   <button class="btn btn-g btn-sm" onclick="previewBand()">🔊 Hear the band</button></div>
+   <button class="btn btn-pink full" style="font-size:18px;padding:16px" onclick="startConcert()">🎤 Go on stage!</button>
+   <p class="hint" style="text-align:center;margin:8px 0 18px">Tip: headphones make your recording sound like a real studio.</p>
+   <div class="card"><h3>📼 My concerts</h3><div id="c-list"><p class="hint">Loading…</p></div></div>`;
+  renderConcertList();
+}
+let prevStop=null;
+function previewBand(){if(prevStop){prevStop();prevStop=null;return;}const a=ac(),g=a.createGain();g.gain.value=.6;g.connect(a.destination);
+  const b=band(getSong(CS.song),CS.style,g,null);prevStop=()=>{b.stop();g.disconnect();};setTimeout(()=>{if(prevStop){prevStop();prevStop=null;}},6000);}
+
+/* synth band → any output node */
+function syn(dest,m,t,dur,vol,type='triangle'){const a=ac(),o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=mfreq(m);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(dest);o.start(t);o.stop(t+dur+.05);}
+let NOISE=null;
+function noise(dest,t,dur,vol,freq,type='highpass'){const a=ac();
+  if(!NOISE){NOISE=a.createBuffer(1,a.sampleRate,a.sampleRate);const d=NOISE.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;}
+  const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=NOISE;f.type=type;f.frequency.value=freq;
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(f).connect(g).connect(dest);s.start(t,Math.random()*.5);s.stop(t+dur+.02);}
+function kick(dest,t){const a=ac(),o=a.createOscillator(),g=a.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(42,t+.15);
+  g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(g).connect(dest);o.start(t);o.stop(t+.32);}
+function band(song,style,dest,onLine){
+  const a=ac(),bpm=style==='soft'?76:style==='guide'?100:92,B=60/bpm,root=(D.sa||60);
+  const prog=[[0,4,7],[7,11,14],[9,12,16],[5,9,12]];
+  let next=a.currentTime+.1,i=0,stopped=false,timers=[];
+  const drums=style!=='soft';
+  const tick=()=>{if(stopped)return;
+    while(next<a.currentTime+.2){
+      const beat=i%4,bar=Math.floor(i/4)%4,ch=prog[bar];
+      if(drums){if(beat===0||beat===2)kick(dest,next);if(beat===1||beat===3)noise(dest,next,.18,.22,1500,'bandpass');
+        noise(dest,next,.05,.06,7000);noise(dest,next+B/2,.05,.04,7000);}
+      if(style==='pop'||style==='soft'){
+        if(beat===0){ch.forEach(n=>syn(dest,root+n-12,next,B*4,style==='soft'?.06:.045));syn(dest,root+ch[0]-24,next,B*4,.16,'sine');}
+        if(style==='pop')syn(dest,root+ch[(beat)%3],next+B/2,B/2,.035);
+        else if(beat===2)syn(dest,root+ch[1],next,B*2,.04);
+      }
+      next+=B;i++;
+    }};
+  const iv=setInterval(tick,25);tick();
+  // guide tune: play melody + sync lines
+  if(style==='guide'&&song.syl){let t=0;
+    song.syl.forEach((line,li)=>{
+      timers.push(setTimeout(()=>onLine&&onLine(li),t*1000));
+      line.forEach((x,k)=>{const d=k===line.length-1?B*2:B;const at=t;timers.push(setTimeout(()=>{if(!stopped){syn(dest,x.m,a.currentTime+.01,d*.9,.12);onLine&&onLine(li,k);}},at*1000));t+=d;});
+      t+=B*2;});
+    timers.push(setTimeout(()=>onLine&&onLine(song.syl.length),t*1000));}
+  return {stop(){stopped=true;clearInterval(iv);timers.forEach(clearTimeout);}};
+}
+
+/* the stage */
+let ST=null;
+async function startConcert(){
+  if(prevStop){prevStop();prevStop=null;}
+  const song=getSong(CS.song),a=ac();
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});}
+  catch(e){toast('Microphone blocked — please allow it 🎤',4000);return;}
+  const recDest=a.createMediaStreamDestination(),bus=a.createGain();bus.gain.value=.55;bus.connect(a.destination);
+  const bandRec=a.createGain();bandRec.gain.value=.5;bus.connect(bandRec).connect(recDest);
+  const src=a.createMediaStreamSource(stream),vg=a.createGain();vg.gain.value=1.6;src.connect(vg).connect(recDest);
+  const an=a.createAnalyser();an.fftSize=1024;src.connect(an);
+  const mime=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))||'';
+  let rec=null,chunks=[];
+  if(window.MediaRecorder){try{rec=new MediaRecorder(recDest.stream,mime?{mimeType:mime}:{});rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);}catch(e){rec=null;}}
+  if(!rec)toast('This phone can\'t record — but you can still perform! 🎤',3500);
+  ST={song,stream,bus,an,rec,chunks,mime,line:0,t0:0,buf:new Float32Array(an.fftSize),raf:0,band:null};
+  const ov=document.createElement('div');ov.className='stage-ov';ov.id='stage-ov';
+  ov.innerHTML=`<div class="spot" id="spot"></div>
+    <div class="s-top"><span id="s-rec">${rec?'<i class="dot"></i> REC':'LIVE'}</span><span id="s-time">0:00</span><button class="icon-btn" onclick="endConcert(true)">✕</button></div>
+    <div class="s-title">${song.emoji} ${esc(song.title)}</div>
+    <div class="s-lyrics"><div class="s-now" id="s-now"></div><div class="s-next" id="s-next"></div></div>
+    <div class="count" id="count">3</div>
+    <div class="crowd" id="crowd">${['👏','🙌','💜','🎉','🙋‍♀️','👏','🌟','🙌'].map((e,i)=>`<span style="animation-delay:${i*.13}s">${e}</span>`).join('')}</div>
+    <div class="s-btns">${song.tune&&CS.style==='guide'?'':'<button class="btn btn-sun" id="s-nextbtn" onclick="concertLine(ST.line+1)">Next line ▶</button>'}<button class="btn btn-pink" onclick="endConcert()">Finish 🎤</button></div>`;
+  document.body.appendChild(ov);
+  concertLine(0);
+  for(const n of ['3','2','1']){document.getElementById('count').textContent=n;syn(a.destination,n==='1'?84:79,a.currentTime,.15,.15);await new Promise(r=>setTimeout(r,800));if(!ST)return;}
+  document.getElementById('count').remove();
+  if(rec)rec.start(500);
+  ST.t0=performance.now();
+  ST.band=band(song,CS.style,bus,(li,k)=>{if(li>=song.lines.length){setTimeout(()=>ST&&endConcert(),1500);return;}if(k==null||li!==ST.line)concertLine(li);if(k!=null)hiSyl(k);});
+  const loop=()=>{if(!ST)return;ST.raf=requestAnimationFrame(loop);
+    an.getFloatTimeDomainData(ST.buf);let r=0;for(const v of ST.buf)r+=v*v;r=Math.sqrt(r/ST.buf.length);
+    const lv=Math.min(1,r*8),sp=document.getElementById('spot');if(sp)sp.style.setProperty('--lv',lv);
+    document.getElementById('crowd').classList.toggle('hype',lv>.35);
+    const s=Math.floor((performance.now()-ST.t0)/1000);document.getElementById('s-time').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+  loop();
+}
+function concertLine(i){
+  const s=ST.song;if(i>=s.lines.length){i=s.lines.length-1;}ST.line=i;
+  const now=document.getElementById('s-now'),nx=document.getElementById('s-next');if(!now)return;
+  if(s.syl)now.innerHTML=s.syl[i].map((x,k)=>`<span id="cs${k}">${esc(x.s.replace(/-$/,''))}</span>${x.s.endsWith('-')?'':' '}`).join('');
+  else now.textContent=s.lines[i];
+  nx.textContent=s.lines[i+1]||'🎶 last line!';
+  const nb=document.getElementById('s-nextbtn');if(nb)nb.style.visibility=i>=s.lines.length-1?'hidden':'visible';
+}
+function hiSyl(k){document.querySelectorAll('.s-now span').forEach((e,j)=>e.classList.toggle('on',j<=k));}
+async function endConcert(cancel){
+  if(!ST)return;const S=ST;ST=null;
+  cancelAnimationFrame(S.raf);if(S.band)S.band.stop();
+  const ov=document.getElementById('stage-ov');
+  if(cancel||!S.rec||S.rec.state==='inactive'){if(S.rec&&S.rec.state!=='inactive')S.rec.stop();S.stream.getTracks().forEach(t=>t.stop());ov&&ov.remove();if(!cancel)concertDone(null,S);return;}
+  // applause into the recording
+  const a=ac();for(let j=0;j<40;j++)noise(S.bus,a.currentTime+Math.random()*2.2,.08,.25,1200+Math.random()*1500,'bandpass');
+  noise(S.bus,a.currentTime,2.6,.08,900,'lowpass');
+  ov.querySelector('.s-btns').innerHTML='<div class="s-title">👏 The crowd loves you!</div>';ov.querySelector('#crowd').classList.add('hype');confetti();
+  await new Promise(r=>setTimeout(r,2600));
+  await new Promise(r=>{S.rec.onstop=r;S.rec.stop();});
+  S.stream.getTracks().forEach(t=>t.stop());
+  const blob=new Blob(S.chunks,{type:S.mime||S.chunks[0]?.type||'audio/webm'});
+  const item={id:'c'+Date.now(),title:S.song.title,emoji:S.song.emoji,date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short'}),secs:Math.round((performance.now()-S.t0)/1000),blob};
+  try{await idbPut(item);await idbTrim(12);}catch(e){}
+  ov.remove();concertDone(item,S);
+}
+function concertDone(item,S){
+  award('concert',S.song.id,0,3);
+  document.getElementById('c-body').innerHTML=`<div class="party"><div class="big">🌟</div><h2>What a show, Jiana!</h2><p>${item?'Listen to your concert:':'Great performance!'}</p>
+   ${item?`<audio controls src="${URL.createObjectURL(item.blob)}" style="width:100%;margin:14px 0"></audio>
+   <div style="display:grid;gap:10px"><button class="btn btn-ok full" onclick="shareConcert('${item.id}')">📤 Send to family</button>`:'<div style="display:grid;gap:10px;margin-top:14px">'}
+   <button class="btn btn-pink full" onclick="startConcert()">🔁 Sing again</button>
+   <button class="btn btn-g full" onclick="renderConcertPick()">Pick another song</button></div></div>`;
+}
+function fileOf(it){const ext=/mp4/.test(it.blob.type)?'m4a':'webm';return new File([it.blob],`Jiana - ${it.title}.${ext}`.replace(/[\\/:*?"<>|]/g,''),{type:it.blob.type});}
+async function shareConcert(id){
+  const it=(await idbAll()).find(x=>x.id===id);if(!it)return;const f=fileOf(it);
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'Jiana\'s concert 🎤',text:`Jiana sings ${it.title}! 🎤`});return;}catch(e){if(e.name==='AbortError')return;}}
+  const u=URL.createObjectURL(f),l=document.createElement('a');l.href=u;l.download=f.name;document.body.appendChild(l);l.click();l.remove();toast('Saved to Downloads 📥');
+}
+async function renderConcertList(){
+  const el=document.getElementById('c-list');if(!el)return;let all=[];try{all=await idbAll();}catch(e){}
+  all.sort((a,b)=>b.id.localeCompare(a.id));
+  el.innerHTML=all.length?all.map(c=>`<div class="list-item"><span>${c.emoji} ${esc(c.title)}<br><small style="color:var(--text3);font-weight:700">${c.date} · ${Math.floor(c.secs/60)}:${String(c.secs%60).padStart(2,'0')}</small></span><button class="btn btn-g btn-sm" onclick="playConcert('${c.id}',this)">▶</button><button class="btn btn-g btn-sm" onclick="shareConcert('${c.id}')">📤</button><button class="btn btn-g btn-sm" onclick="delConcert('${c.id}')">🗑</button></div>`).join(''):'<p class="hint">No concerts yet — your first one is waiting!</p>';
+}
+let playing=null;
+async function playConcert(id,btn){if(playing){playing.pause();const was=playing.dataset.id;playing=null;document.querySelectorAll('#c-list .btn').forEach(b=>{if(b.textContent==='⏸')b.textContent='▶';});if(was===id)return;}
+  const it=(await idbAll()).find(x=>x.id===id);if(!it)return;playing=new Audio(URL.createObjectURL(it.blob));playing.dataset.id=id;btn.textContent='⏸';playing.onended=()=>{btn.textContent='▶';playing=null;};playing.play();}
+async function delConcert(id){if(!confirm('Delete this concert?'))return;await idbDel(id);renderConcertList();}
+
+/* tiny IndexedDB store for recordings */
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('song-teacher',1);r.onupgradeneeded=()=>r.result.createObjectStore('concerts',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+async function idbTx(mode,fn){const db=await idb();return new Promise((res,rej)=>{const tx=db.transaction('concerts',mode),st=tx.objectStore('concerts'),q=fn(st);tx.oncomplete=()=>res(q&&q.result);tx.onerror=()=>rej(tx.error);});}
+const idbPut=o=>idbTx('readwrite',s=>s.put(o));
+const idbAll=()=>idbTx('readonly',s=>s.getAll());
+const idbDel=id=>idbTx('readwrite',s=>s.delete(id));
+async function idbTrim(n){const all=(await idbAll()).sort((a,b)=>b.id.localeCompare(a.id));for(const c of all.slice(n))await idbDel(c.id);}
+
 function confetti(){const e=['🎉','⭐','🎵','💜','🌟','🎶'];for(let i=0;i<28;i++){const c=document.createElement('div');c.className='confetti';c.textContent=e[i%e.length];c.style.left=Math.random()*100+'vw';c.style.animationDuration=(1.8+Math.random()*1.6)+'s';c.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4200);}}
 
 /* ════════════ GROWN-UPS ════════════ */
@@ -841,7 +1003,7 @@ function saveSong(){
   save();clearForm();renderGList();toast('Saved! 🎵 '+lines.length+' lines');
 }
 function setGoal(v){D.goal=+v;save();}
-function unlockToday(){day().unlocked=true;save();toast('Game unlocked for today 🎈');}
+function unlockToday(){day().unlocked=true;save();toast('Stage open for today 🎤');}
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){try{speechSynthesis.cancel();}catch(e){}}});
