@@ -140,6 +140,25 @@ button{font-family:inherit;cursor:pointer;border:none;}
 .hold{height:10px;background:var(--bg3);border-radius:99px;overflow:hidden;max-width:220px;margin:0 auto;width:100%;}
 .hold i{display:block;height:100%;width:0;background:var(--green);transition:width .08s;}
 
+/* voice school */
+.path{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.lesson{display:flex;align-items:center;gap:12px;background:var(--bg1);border:1px solid var(--border);border-radius:16px;padding:12px 14px;text-align:left;width:100%;}
+.lesson .num{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:16px;background:var(--bg2);color:var(--acc);flex-shrink:0;}
+.lesson h4{font-size:15px;font-weight:900;}
+.lesson p{font-size:12px;color:var(--text2);font-weight:600;}
+.lesson .st{margin-left:auto;font-size:12px;font-weight:900;color:var(--orange);white-space:nowrap;}
+.lesson.done .num{background:var(--green);color:#fff;}
+.lesson.next{border:2px solid var(--acc);box-shadow:0 4px 14px rgba(107,63,160,.15);}
+.lesson.next .num{background:var(--acc);color:#fff;}
+.lesson.locked{opacity:.45;}
+.sa-card{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff6d6,#ffe1ef);border:1px solid #ffd27a;border-radius:16px;padding:12px 14px;margin-bottom:8px;}
+.sa-card b{font-size:15px;font-weight:900;}
+.sa-card p{font-size:12px;color:var(--text2);font-weight:600;}
+.sa-card .r{margin-left:auto;display:flex;gap:6px;}
+.seg{display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin-bottom:10px;}
+.seg button{flex:1;padding:8px;border-radius:10px;background:none;font-weight:800;color:var(--text2);font-size:13px;}
+.seg button.on{background:var(--bg1);color:var(--acc);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
 /* forms */
 label{display:block;font-size:12px;font-weight:800;color:var(--text2);margin:10px 0 4px;}
 input,textarea,select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--bg3);font-family:inherit;font-size:15px;background:#fff;color:var(--text);}
@@ -191,9 +210,11 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
     </div>
   </div>
   <div class="reward" id="reward"></div>
+  <div class="sec">🎼 Voice school · start here</div>
+  <div id="school"></div>
   <div class="sec">My songs</div>
   <div class="grid" id="my-songs"></div>
-  <div class="sec">Warm-up tunes · sing on pitch</div>
+  <div class="sec">Practice tunes · sing on pitch</div>
   <div class="grid" id="tune-songs"></div>
 </section>
 
@@ -259,6 +280,7 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
       <button class="btn btn-g btn-sm" onclick="speak('Hello Jiana! Let\'s sing together!')">🔊 Test voice</button>
       <button class="btn btn-sun btn-sm" onclick="unlockToday()">🔓 Unlock game today</button>
     </div>
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="g-all" style="width:auto" onchange="D.allOpen=this.checked;save()"/> Open all voice-school lessons (skip the order)</label>
   </div>
 </section>
 
@@ -301,20 +323,43 @@ const TUNES = [
 ];
 TUNES.forEach(t=>{
   t.builtin=true;
-  t.syl=t.tune.map(l=>l.split(' ').map(p=>{const i=p.lastIndexOf(':');return{s:p.slice(0,i),n:p.slice(i+1)};}));
+  t.syl=t.tune.map(l=>l.split(' ').map(p=>{const i=p.lastIndexOf(':'),n=p.slice(i+1);return{s:p.slice(0,i),sub:n.replace(/\d/,''),m:midi(n)};}));
   t.lines=t.syl.map(l=>l.map(x=>x.s).join(' ').replace(/- /g,''));
 });
+
+/* Voice school — sargam ladder (offsets in semitones from Sa) */
+const SW={S:[0,'Sa','Do'],R:[2,'Re','Re'],G:[4,'Ga','Mi'],M:[5,'Ma','Fa'],P:[7,'Pa','So'],D:[9,'Dha','La'],N:[11,'Ni','Ti'],T:[12,"Sa'","Do'"]};
+const LESSONS=[
+  {t:'Find your Sa',d:'One note. Sing "Saaa" and hold it',em:'🌱',hold:700,l:['S','S S','S S S']},
+  {t:'Sa Re Ga',d:'Your first three steps',em:'🪜',l:['S R','S R G','G R S','S R G R S']},
+  {t:'Up to Pa',d:'Five steps up and down',em:'🧗',l:['S R G M','S R G M P','P M G R S','S R G M P M G R S']},
+  {t:'Aaroh · going up',d:'The full ladder up',em:'⬆️',l:['S R G M','P D N T','S R G M P D N T']},
+  {t:'Avroh · coming down',d:'The full ladder down',em:'⬇️',l:['T N D P','M G R S','T N D P M G R S']},
+  {t:'Up and down',d:'Aaroh + avroh together',em:'🎢',l:['S R G M P D N T','T N D P M G R S']},
+  {t:'Alankar 1',d:'Groups of three: Sa Re Ga, Re Ga Ma…',em:'🧩',l:['S R G','R G M','G M P','M P D','P D N','D N T']},
+  {t:'Alankar 2',d:'Skip a step: Sa Ga, Re Ma…',em:'🦘',l:['S G','R M','G P','M D','P N','D T']},
+  {t:'Big jumps',d:'Sa to Ga to Pa — like a pro',em:'🚀',l:['S G P','S P T','T P G S']},
+  {t:'Long notes',d:'Hold each note for 2 seconds — breath power!',em:'🫁',hold:1800,l:['S','G','P','T']},
+  {t:'Twinkle in sargam',d:'Your first song — in Sa Re Ga!',em:'⭐',l:['S S P P D D P','M M G G R R S','P P M M G G R','P P M M G G R','S S P P D D P','M M G G R R S']},
+];
+function lessonSong(i){
+  const L=LESSONS[i],sa=D.sa||60,dm=D.names==='do';
+  const syl=L.l.map(line=>line.split(' ').map(k=>({s:SW[k][dm?2:1],sub:SW[k][dm?1:2],m:sa+SW[k][0]})));
+  return {id:'L'+i,lessonIdx:i,title:L.t,emoji:L.em,hold:L.hold,syl,lines:syl.map(l=>l.map(x=>x.s).join(' '))};
+}
+const lessonDone=i=>modeStars('L'+i,'tune')>=LESSONS[i].l.length*2;
+const lessonOpen=i=>i===0||lessonDone(i-1)||D.allOpen;
 
 let D = load();
 function load(){
   let d={};
   try{d=JSON.parse(localStorage.getItem('jiana-songs-v1'))||{};}catch(e){}
-  return Object.assign({songs:[],prog:{},days:{},goal:15,voice:''},d);
+  return Object.assign({songs:[],prog:{},days:{},goal:15,voice:'',sa:60,names:'sa'},d);
 }
 function save(){try{localStorage.setItem('jiana-songs-v1',JSON.stringify(D));}catch(e){}}
 const today=()=>new Date().toLocaleDateString('en-CA');
 function day(k=today()){return D.days[k]||(D.days[k]={stars:0,secs:0,best:{},unlocked:false});}
-function allSongs(){return [...D.songs,...TUNES];}
+function allSongs(){return [...D.songs,...TUNES,...LESSONS.map((_,i)=>lessonSong(i))];}
 function getSong(id){return allSongs().find(s=>s.id===id);}
 function songStars(id){const p=D.prog[id]||{};let t=0;for(const m in p)for(const l in p[m])t+=p[m][l];return t;}
 function modeStars(id,m){const p=(D.prog[id]||{})[m]||{};return Object.values(p).reduce((a,b)=>a+b,0);}
@@ -353,6 +398,42 @@ function renderHome(){
   document.getElementById('my-songs').innerHTML=D.songs.map(card).join('')+
     `<button class="song add-song" onclick="openGrown()"><span class="em">➕</span><h4>Add my favourite song</h4><small style="color:var(--text3)">ask a grown-up</small></button>`;
   document.getElementById('tune-songs').innerHTML=TUNES.map(card).join('');
+  renderSchool();
+}
+function renderSchool(){
+  const dm=D.names==='do',nextI=LESSONS.findIndex((_,i)=>!lessonDone(i));
+  let h=`<div class="sa-card"><span style="font-size:28px">🎹</span><div><b>My Sa: ${noteName(D.sa)}</b><p>The home note all lessons start from</p></div><div class="r"><button class="btn btn-g btn-sm" onclick="tone(D.sa,1.2)">🔊</button><button class="btn btn-sun btn-sm" style="white-space:nowrap" onclick="findSa()">Find it</button></div></div>
+  <div class="seg"><button class="${dm?'':'on'}" onclick="setNames('sa')">Sa Re Ga</button><button class="${dm?'on':''}" onclick="setNames('do')">Do Re Mi</button></div><div class="path">`;
+  LESSONS.forEach((L,i)=>{const done=lessonDone(i),open=lessonOpen(i),st=modeStars('L'+i,'tune');
+    h+=`<button class="lesson ${done?'done':i===nextI?'next':''} ${open?'':'locked'}" onclick="startLesson(${i})"><span class="num">${done?'✓':open?i+1:'🔒'}</span><div><h4>${L.em} ${L.t}</h4><p>${L.d}</p></div>${st?`<span class="st">⭐ ${st}</span>`:''}</button>`;});
+  document.getElementById('school').innerHTML=h+'</div>';
+}
+function setNames(v){D.names=v;save();renderSchool();}
+function noteName(m){return ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][m%12]+(Math.floor(m/12)-1);}
+
+/* Find my Sa — she hums, we pick her comfy home note */
+async function findSa(){
+  stopAll();cur={id:'sa',lessonIdx:-1,lines:[]};
+  document.getElementById('p-title').textContent='🎹 Find my Sa';go('practice');document.getElementById('p-dots').innerHTML='';
+  document.getElementById('p-body').innerHTML=`<div class="stage"><div class="teacher">Take a breath and sing a long, comfy <b>"Aaaaa"</b> — not too high, not too low.</div><div class="hold"><i id="hold"></i></div><div class="lyric" id="sa-res" style="font-size:20px"></div><button class="btn btn-pink" id="sa-go">🎤 Start</button></div>`;
+  document.getElementById('sa-go').onclick=async()=>{
+    try{await startMic();}catch(e){toast('Microphone blocked — please allow it 🎤',4000);return;}
+    const b=document.getElementById('sa-go');b.disabled=true;b.textContent='Listening… keep singing';
+    const got=[],t0=performance.now();
+    const step=()=>{if(!mic)return;const f=pitch();if(f>0)got.push(69+12*Math.log2(f/440));
+      const el=document.getElementById('hold');if(el)el.style.width=Math.min(100,got.length/150*100)+'%';
+      if(got.length<150&&performance.now()-t0<12000){raf=requestAnimationFrame(step);return;}
+      stopMic();
+      if(got.length<30){document.getElementById('sa-res').textContent='I couldn\'t hear you — try a bit louder 🙂';b.disabled=false;b.textContent='🎤 Try again';return;}
+      got.sort((a,b)=>a-b);let m=Math.round(got[got.length>>1]);
+      while(m>67)m-=12;while(m<53)m+=12;   // keep Sa in a kid-friendly range
+      D.sa=m;save();tone(m,1.2);
+      document.getElementById('p-body').innerHTML=`<div class="party"><div class="big">🎹</div><h2>Your Sa is ${noteName(m)}!</h2><p>All lessons will now start from your own home note.</p>
+      <div class="row" style="margin:16px 0"><button class="btn btn-g" onclick="D.sa--;save();tone(D.sa,1);document.querySelector('.party h2').textContent='Your Sa is '+noteName(D.sa)+'!'">⬇ Lower</button><button class="btn btn-g" onclick="tone(D.sa,1.2)">🔊</button><button class="btn btn-g" onclick="D.sa++;save();tone(D.sa,1);document.querySelector('.party h2').textContent='Your Sa is '+noteName(D.sa)+'!'">⬆ Higher</button></div>
+      <button class="btn btn-p full" onclick="go('home')">Done</button></div>`;};
+    step();};
+}
+function _noop(){
 }
 
 /* ════════════ SONG PAGE ════════════ */
@@ -469,7 +550,8 @@ const starsFor=p=>p>=.85?3:p>=.6?2:p>=.3?1:0;
 /* ════════════ PRACTICE (lyrics) ════════════ */
 let P=null,tick=null;
 function startTimer(){clearInterval(tick);tick=setInterval(()=>{if(document.hidden)return;day().secs++;if(day().secs%10===0)save();},1000);}
-function exitPractice(){stopAll();clearInterval(tick);save();openSong(cur.id);}
+function exitPractice(){stopAll();clearInterval(tick);save();if(cur.lessonIdx!=null)go('home');else openSong(cur.id);}
+function startLesson(i){if(!lessonOpen(i)){toast('🔒 Finish the lesson before this one first!');return;}cur=lessonSong(i);startTune();}
 function stopAll(){try{speechSynthesis.cancel();}catch(e){}if(rec){const r=rec;rec=null;try{r.abort();}catch(e){}}stopMic();stopTune();}
 
 function startMode(k){
@@ -589,8 +671,7 @@ function celebrate(){
 /* ════════════ AUDIO: synth + pitch ════════════ */
 let AC=null;
 function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
-const NAMES={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
-function midi(n){const m=n.match(/^([A-G])(#|b)?(\d)$/);return 12*(+m[3]+1)+NAMES[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0);}
+function midi(n){const N={C:0,D:2,E:4,F:5,G:7,A:9,B:11},m=n.match(/^([A-G])(#|b)?(\d)$/);return 12*(+m[3]+1)+N[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0);}
 const mfreq=m=>440*Math.pow(2,(m-69)/12);
 function tone(m,dur=.45,when=0,vol=.25){const a=ac(),t=a.currentTime+when;
   const o=a.createOscillator(),o2=a.createOscillator(),g=a.createGain();
@@ -603,7 +684,7 @@ let melT=[];
 function stopTune(){melT.forEach(clearTimeout);melT=[];}
 function playMelody(syl,onIdx,onEnd){stopTune();const beat=.5;
   syl.forEach((x,i)=>{const last=i===syl.length-1,d=last?beat*1.6:beat;
-    melT.push(setTimeout(()=>{tone(midi(x.n),d*.95);onIdx&&onIdx(i);},i*beat*1000));});
+    melT.push(setTimeout(()=>{tone(x.m,d*.95);onIdx&&onIdx(i);},i*beat*1000));});
   melT.push(setTimeout(()=>onEnd&&onEnd(),(syl.length*beat+.6)*1000));}
 
 let mic=null;
@@ -634,8 +715,8 @@ function pitch(){ // autocorrelation
 let T=null,raf=0;
 async function startTune(){
   stopAll();startTimer();
-  T={line:0,k:0,hold:0,last:performance.now(),lineStart:performance.now(),miss:0,got:[]};
-  document.getElementById('p-title').textContent='🎯 Sing on the note';
+  T={line:0,k:0,hold:0,need:cur.hold||350,last:performance.now(),lineStart:performance.now(),miss:0,got:[]};
+  document.getElementById('p-title').textContent=cur.lessonIdx!=null?`${cur.emoji} Lesson ${cur.lessonIdx+1}: ${cur.title}`:'🎯 Sing on the note';
   go('practice');
   document.getElementById('p-body').innerHTML=`<div class="stage"><div class="teacher">🎤 Tap start and allow the microphone</div><button class="btn btn-pink" onclick="beginTune()">Start singing</button><p class="hint">Sing in any comfy voice — high or low both count. Use headphones for best results.</p></div>`;
   renderDots(cur.lines.length,0,[]);
@@ -649,13 +730,13 @@ function renderTuneLine(){
   renderDots(cur.lines.length,T.line,T.got);
   document.getElementById('p-body').innerHTML=`
    <div class="stage" style="gap:12px">
-    <div class="bubbles" id="bubs">${syl.map((x,i)=>`<div class="bub" id="b${i}">${esc(x.s.replace(/-$/,''))}<small>${x.n.replace(/\d/,'')}</small></div>`).join('')}</div>
+    <div class="bubbles" id="bubs">${syl.map((x,i)=>`<div class="bub" id="b${i}">${esc(x.s.replace(/-$/,''))}<small>${esc(x.sub||'')}</small></div>`).join('')}</div>
     <div class="meter"><div class="zone"></div><span class="lbl" style="top:6px">⬆ too high</span><span class="lbl" style="bottom:6px">⬇ too low</span><div class="ball" id="ball">🎵</div></div>
     <div class="hold"><i id="hold"></i></div>
     <div class="teacher" id="tfb">Sing "${esc(syl[0].s.replace(/-$/,''))}"</div>
     <div class="stars" id="stars"></div>
    </div>
-   <div class="row"><button class="btn btn-g" onclick="playMelody(cur.syl[T.line],i=>markBub(i))">🔊 Hear line</button><button class="btn btn-g" onclick="tone(midi(cur.syl[T.line][T.k].n),.8)">🎹 Hear note</button></div>
+   <div class="row"><button class="btn btn-g" onclick="playMelody(cur.syl[T.line],i=>markBub(i))">🔊 Hear line</button><button class="btn btn-g" onclick="tone(cur.syl[T.line][T.k].m,.8)">🎹 Hear note</button></div>
    <button class="btn btn-g full" style="margin-top:8px" onclick="skipSyl()">Skip this one ▶</button>`;
   T.k=0;T.hold=0;T.miss=0;T.lineStart=performance.now();markBub(0);
 }
@@ -666,16 +747,22 @@ function advanceSyl(){
   if(T.k<syl.length){markBub();document.getElementById('tfb').textContent=`Sing "${syl[T.k].s.replace(/-$/,'')}"`;return;}
   markBub(-1);
   const secs=(performance.now()-T.lineStart)/1000/syl.length;
-  let s=3;if(secs>3)s--;if(T.miss>=2)s--;if(T.miss>=syl.length)s=1;s=Math.max(1,s);
+  let s=3;if(secs>3+T.need/1000)s--;if(T.miss>=2)s--;if(T.miss>=syl.length)s=1;s=Math.max(1,s);
   award(cur.id,'tune',T.line,s);T.got[T.line]=true;chime();
   document.getElementById('stars').innerHTML=[0,1,2].map(k=>`<span class="s" style="animation-delay:${k*.12}s">${k<s?'⭐':'☆'}</span>`).join('');
   document.getElementById('tfb').textContent=s===3?CHEERS[Math.random()*CHEERS.length|0]:'Nice! Next line…';
   T.pause=true;
   setTimeout(()=>{T.pause=false;
+    if(!document.getElementById('bubs'))return;
     if(T.line<cur.lines.length-1){T.line++;renderTuneLine();}
     else{stopMic();P={mode:'tune'};celebrateTune();}},1600);
 }
 function celebrateTune(){const st=modeStars(cur.id,'tune'),max=cur.lines.length*3;document.getElementById('p-dots').innerHTML='';
+  if(cur.lessonIdx!=null){const i=cur.lessonIdx,ok=lessonDone(i),nx=i+1<LESSONS.length;
+    document.getElementById('p-body').innerHTML=`<div class="party"><div class="big">${ok?'🏅':'💪'}</div><h2>${ok?'Lesson '+(i+1)+' passed!':'Good try!'}</h2><p>⭐ ${st} of ${max}. ${ok?'':'Get '+LESSONS[i].l.length*2+' stars to open the next lesson.'}</p><div style="margin-top:20px;display:grid;gap:10px">
+    ${ok&&nx?`<button class="btn btn-p full" onclick="startLesson(${i+1})">Next: ${LESSONS[i+1].em} ${LESSONS[i+1].t}</button>`:''}
+    ${ok&&!nx?`<p style="font-weight:800">🎓 Voice school complete! Now sing your favourite songs.</p>`:''}
+    <button class="btn btn-g full" onclick="startLesson(${i})">🔁 Practise again</button><button class="btn btn-g full" onclick="exitPractice()">Back home</button></div></div>`;confetti();return;}
   document.getElementById('p-body').innerHTML=`<div class="party"><div class="big">🎯</div><h2>Perfect pitch power!</h2><p>⭐ ${st} of ${max} on this tune.</p><div style="margin-top:20px;display:grid;gap:10px"><button class="btn btn-p full" onclick="startTune()">🔁 Sing it again</button><button class="btn btn-g full" onclick="exitPractice()">Back to song</button></div></div>`;confetti();}
 function loop(){
   raf=requestAnimationFrame(loop);
@@ -683,8 +770,8 @@ function loop(){
   const now=performance.now(),dt=now-T.last;T.last=now;
   const f=pitch(),ball=document.getElementById('ball'),hold=document.getElementById('hold'),fb=document.getElementById('tfb');
   if(!ball)return;
-  if(f<0){ball.classList.remove('on','good');T.hold=Math.max(0,T.hold-dt*.5);hold.style.width=(T.hold/350*100)+'%';return;}
-  const target=midi(cur.syl[T.line][T.k].n);
+  if(f<0){ball.classList.remove('on','good');T.hold=Math.max(0,T.hold-dt*.5);hold.style.width=(T.hold/T.need*100)+'%';return;}
+  const target=cur.syl[T.line][T.k].m;
   let diff=12*Math.log2(f/mfreq(target));diff=((diff%12)+18)%12-6; // fold octaves → kids can sing any octave
   ball.classList.add('on');
   ball.style.top=(50-Math.max(-6,Math.min(6,diff))/6*45)+'%';
@@ -692,8 +779,8 @@ function loop(){
   ball.classList.toggle('good',good);
   if(good){T.hold+=dt;fb.textContent='Perfect! Hold it… ✨';}
   else{T.hold=Math.max(0,T.hold-dt);fb.textContent=diff<0?'A little higher ⬆':'A little lower ⬇';if(Math.abs(diff)>3)T.miss+=dt/4000;}
-  hold.style.width=Math.min(100,T.hold/350*100)+'%';
-  if(T.hold>=350)advanceSyl();
+  hold.style.width=Math.min(100,T.hold/T.need*100)+'%';
+  if(T.hold>=T.need)advanceSyl();
 }
 
 /* ════════════ REWARD GAME ════════════ */
@@ -725,7 +812,7 @@ function gate(){const a=11+(Math.random()*8|0),b=12+(Math.random()*7|0);const r=
 let pickedEmo=EMOJIS[0];
 function openGrown(){
   if(!sessionStorage.getItem('gu')){if(!gate()){toast('Ask a grown-up to help!');return;}sessionStorage.setItem('gu','1');}
-  document.getElementById('g-goal').value=D.goal;loadVoices();renderEmo();renderGList();go('grown');
+  document.getElementById('g-goal').value=D.goal;document.getElementById('g-all').checked=!!D.allOpen;loadVoices();renderEmo();renderGList();go('grown');
 }
 function renderEmo(){document.getElementById('f-emo').innerHTML=EMOJIS.map(e=>`<button class="${e===pickedEmo?'sel':''}" onclick="pickedEmo='${e}';renderEmo()">${e}</button>`).join('');}
 function renderGList(){
