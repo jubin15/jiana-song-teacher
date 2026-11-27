@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#6b3fa0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Song Teacher"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" href="icon-192.png"/>
+<link rel="manifest" href="manifest.json"/>
+<title>Jiana's Song Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg0:#f5f2fa;--bg1:#fff;--bg2:#ede8f5;--bg3:#e2daf0;
+  --acc:#6b3fa0;--acc2:#5a3388;--acc3:#3d2260;--pink:#ff5fa2;--sun:#ffc93c;
+  --green:#2eb872;--orange:#ff8a3d;--blue:#3d8bff;
+  --text:#1a0d2e;--text2:#5a4a72;--text3:#a090bc;
+  --border:rgba(0,0,0,.08);--r:20px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg0);}
+body{font-family:'Nunito',sans-serif;color:var(--text);overflow-x:hidden;}
+.app{max-width:560px;margin:0 auto;min-height:100%;padding:calc(var(--safe-top) + 12px) 16px calc(var(--safe-bot) + 24px);}
+button{font-family:inherit;cursor:pointer;border:none;}
+.screen{display:none;animation:up .25s ease;}
+.screen.on{display:block;}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* top */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.top h1{font-size:22px;font-weight:900;flex:1;letter-spacing:-.3px;}
+.top small{display:block;font-size:12px;font-weight:600;color:var(--text3);}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:var(--bg1);border:1px solid var(--border);font-size:18px;display:grid;place-items:center;color:var(--text);text-decoration:none;}
+
+/* hero */
+.hero{background:linear-gradient(135deg,#7b3fe4,#ff5fa2);color:#fff;border-radius:var(--r);padding:18px;display:flex;gap:16px;align-items:center;margin-bottom:14px;box-shadow:0 8px 24px rgba(123,63,228,.25);}
+.ring{width:86px;height:86px;flex-shrink:0;position:relative;}
+.ring svg{transform:rotate(-90deg);}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-weight:900;line-height:1;text-align:center;}
+.ring b span{display:block;font-size:10px;font-weight:700;opacity:.85;}
+.hero h2{font-size:18px;font-weight:900;}
+.hero p{font-size:13px;opacity:.92;margin-top:3px;font-weight:600;}
+.chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.chip{background:rgba(255,255,255,.22);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800;}
+
+/* reward */
+.reward{border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:18px;background:var(--bg1);border:2px dashed var(--bg3);}
+.reward .em{font-size:34px;}
+.reward h3{font-size:15px;font-weight:900;}
+.reward p{font-size:12px;color:var(--text2);font-weight:600;}
+.reward.open{border:2px solid var(--sun);background:#fff8e1;animation:glow 1.6s infinite;}
+@keyframes glow{50%{box-shadow:0 0 0 6px rgba(255,201,60,.25)}}
+.reward .go{margin-left:auto;}
+
+.sec{font-size:13px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin:4px 2px 10px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.song{border-radius:18px;padding:14px;color:#fff;text-align:left;min-height:118px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.song .em{font-size:30px;}
+.song h4{font-size:15px;font-weight:900;margin-top:auto;line-height:1.15;}
+.song small{font-size:11px;font-weight:700;opacity:.9;}
+.song .badge{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.25);border-radius:99px;font-size:11px;font-weight:900;padding:3px 8px;}
+.add-song{background:var(--bg1)!important;color:var(--acc);border:2px dashed var(--bg3);align-items:center;justify-content:center;text-align:center;}
+.add-song h4{margin-top:4px;}
+
+/* buttons */
+.btn{padding:12px 18px;border-radius:14px;font-size:15px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s;}
+.btn:active{transform:scale(.95);}
+.btn-p{background:var(--acc2);color:#fff;}
+.btn-pink{background:var(--pink);color:#fff;}
+.btn-sun{background:var(--sun);color:#3a2600;}
+.btn-g{background:var(--bg3);color:var(--text2);}
+.btn-ok{background:var(--green);color:#fff;}
+.btn-sm{padding:8px 12px;font-size:13px;border-radius:12px;}
+.full{width:100%;}
+.row{display:flex;gap:8px;}
+.row>*{flex:1;}
+
+/* song screen */
+.song-head{border-radius:var(--r);padding:16px;color:#fff;margin-bottom:12px;}
+.song-head h2{font-size:22px;font-weight:900;}
+.song-head p{font-size:13px;font-weight:700;opacity:.9;}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.mode{background:var(--bg1);border:1px solid var(--border);border-radius:18px;padding:14px;text-align:left;}
+.mode .em{font-size:26px;}
+.mode h4{font-size:15px;font-weight:900;margin-top:4px;}
+.mode p{font-size:12px;color:var(--text2);font-weight:600;line-height:1.35;}
+.mode .st{font-size:12px;margin-top:6px;color:var(--orange);font-weight:900;}
+.mode.locked{opacity:.45;}
+.mode.wide{grid-column:1/-1;background:linear-gradient(135deg,#fff6d6,#ffe1ef);border-color:#ffd27a;}
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px;}
+.card h3{font-size:14px;font-weight:900;margin-bottom:8px;}
+.tips .w{display:flex;gap:8px;padding:6px 0;border-top:1px dashed var(--bg3);font-size:13px;}
+.tips .w:first-of-type{border-top:none;}
+.tips .w b{min-width:84px;color:var(--acc);}
+.tips p{font-size:13px;color:var(--text2);line-height:1.5;font-weight:600;}
+.yt{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000;}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+/* practice */
+.dots{display:flex;gap:5px;justify-content:center;margin:4px 0 14px;flex-wrap:wrap;}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--bg3);}
+.dots i.done{background:var(--green);}
+.dots i.cur{background:var(--acc);transform:scale(1.3);}
+.stage{background:var(--bg1);border-radius:24px;padding:22px 16px;text-align:center;border:1px solid var(--border);min-height:210px;display:flex;flex-direction:column;justify-content:center;gap:14px;margin-bottom:12px;}
+.teacher{font-size:14px;font-weight:800;color:var(--acc);}
+.lyric{font-size:26px;font-weight:900;line-height:1.35;}
+.lyric span{display:inline-block;padding:0 3px;border-radius:8px;transition:all .15s;}
+.lyric .hi{background:var(--sun);transform:scale(1.08);}
+.lyric .ok{color:var(--green);}
+.lyric .miss{color:var(--orange);text-decoration:underline wavy;}
+.lyric .blank{color:transparent;border-bottom:4px solid var(--acc);border-radius:0;}
+.lyric .blank.ok{color:var(--green);border-color:var(--green);}
+.heard{font-size:14px;color:var(--text3);font-weight:700;min-height:20px;font-style:italic;}
+.stars{font-size:34px;letter-spacing:4px;min-height:40px;}
+.stars .s{display:inline-block;animation:pop .4s backwards;}
+@keyframes pop{from{transform:scale(0) rotate(-40deg)}}
+.mic{width:96px;height:96px;border-radius:50%;background:var(--pink);color:#fff;font-size:40px;margin:0 auto;display:grid;place-items:center;box-shadow:0 8px 20px rgba(255,95,162,.4);}
+.mic.live{animation:pulse 1s infinite;}
+@keyframes pulse{50%{box-shadow:0 0 0 18px rgba(255,95,162,.15)}}
+.listen-list .ln{padding:12px;border-radius:14px;font-size:18px;font-weight:800;margin-bottom:6px;background:var(--bg1);border:1px solid var(--border);text-align:left;width:100%;}
+.listen-list .ln.hi{background:#fff3c4;border-color:var(--sun);}
+
+/* tune */
+.bubbles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.bub{padding:8px 10px;border-radius:14px;background:var(--bg2);font-weight:900;font-size:18px;transition:all .15s;position:relative;}
+.bub small{display:block;font-size:10px;color:var(--text3);font-weight:800;}
+.bub.cur{background:var(--acc);color:#fff;transform:scale(1.15);}
+.bub.cur small{color:#e6d8ff;}
+.bub.done{background:var(--green);color:#fff;}
+.bub.done small{color:#d4ffe6;}
+.meter{height:190px;width:110px;margin:0 auto;border-radius:20px;background:linear-gradient(#ffe1e1,#e8fff2 38%,#e8fff2 62%,#e1ecff);position:relative;border:1px solid var(--border);}
+.meter .zone{position:absolute;left:0;right:0;top:40%;height:20%;border-top:2px dashed var(--green);border-bottom:2px dashed var(--green);}
+.meter .ball{position:absolute;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:var(--acc);top:50%;transition:top .08s,background .15s;opacity:.25;display:grid;place-items:center;font-size:20px;}
+.meter .ball.on{opacity:1;}
+.meter .ball.good{background:var(--green);}
+.meter .lbl{position:absolute;left:0;right:0;font-size:11px;font-weight:900;color:var(--text3);}
+.hold{height:10px;background:var(--bg3);border-radius:99px;overflow:hidden;max-width:220px;margin:0 auto;width:100%;}
+.hold i{display:block;height:100%;width:0;background:var(--green);transition:width .08s;}
+
+/* forms */
+label{display:block;font-size:12px;font-weight:800;color:var(--text2);margin:10px 0 4px;}
+input,textarea,select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--bg3);font-family:inherit;font-size:15px;background:#fff;color:var(--text);}
+textarea{min-height:200px;resize:vertical;line-height:1.5;}
+.hint{font-size:12px;color:var(--text3);font-weight:600;margin-top:4px;line-height:1.4;}
+.emo-pick{display:flex;flex-wrap:wrap;gap:6px;}
+.emo-pick button{font-size:22px;width:42px;height:42px;border-radius:12px;background:var(--bg2);}
+.emo-pick button.sel{background:var(--sun);}
+.list-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bg2);}
+.list-item:first-child{border-top:none;}
+.list-item span{flex:1;font-weight:800;}
+
+/* celebrate */
+.party{text-align:center;padding:30px 10px;}
+.party .big{font-size:80px;animation:pop .6s;}
+.party h2{font-size:28px;font-weight:900;margin:8px 0;}
+.party p{font-weight:700;color:var(--text2);}
+.confetti{position:fixed;top:-20px;font-size:22px;pointer-events:none;animation:fall linear forwards;z-index:50;}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+
+/* game */
+.game{position:fixed;inset:0;background:linear-gradient(#bde3ff,#fbe3ff);z-index:40;overflow:hidden;touch-action:manipulation;}
+.game .hud{position:absolute;top:calc(var(--safe-top) + 12px);left:16px;right:16px;display:flex;justify-content:space-between;font-weight:900;font-size:20px;z-index:2;}
+.balloon{position:absolute;bottom:-120px;width:70px;height:86px;border-radius:50% 50% 48% 48%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;animation:rise linear forwards;}
+.balloon::after{content:'';position:absolute;bottom:-30px;left:50%;width:2px;height:30px;background:rgba(0,0,0,.25);}
+@keyframes rise{to{transform:translateY(calc(-100vh - 200px))}}
+.boom{position:absolute;font-size:40px;pointer-events:none;animation:boom .4s forwards;}
+@keyframes boom{to{transform:scale(2);opacity:0}}
+.toast{position:fixed;left:50%;bottom:calc(var(--safe-bot) + 20px);transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;z-index:60;max-width:90%;text-align:center;}
+.spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HOME -->
+<section class="screen on" id="home">
+  <div class="top">
+        <h1>Song Teacher 🎤<small>Hi Jiana! Ready to sing?</small></h1>
+    <button class="icon-btn" onclick="openGrown()" aria-label="Grown-ups">⚙️</button>
+  </div>
+  <div class="hero">
+    <div class="ring" id="ring"></div>
+    <div>
+      <h2 id="hero-h">Let's earn stars!</h2>
+      <p id="hero-p"></p>
+      <div class="chips" id="hero-chips"></div>
+    </div>
+  </div>
+  <div class="reward" id="reward"></div>
+  <div class="sec">My songs</div>
+  <div class="grid" id="my-songs"></div>
+  <div class="sec">Warm-up tunes · sing on pitch</div>
+  <div class="grid" id="tune-songs"></div>
+</section>
+
+<!-- SONG -->
+<section class="screen" id="song">
+  <div class="top">
+    <button class="icon-btn" onclick="go('home')">←</button>
+    <h1 id="song-title-top">Song</h1>
+  </div>
+  <div class="song-head" id="song-head"></div>
+  <div class="modes" id="modes"></div>
+  <div id="song-extra"></div>
+</section>
+
+<!-- PRACTICE -->
+<section class="screen" id="practice">
+  <div class="top">
+    <button class="icon-btn" onclick="exitPractice()">✕</button>
+    <h1 id="p-title">Practice</h1>
+  </div>
+  <div class="dots" id="p-dots"></div>
+  <div id="p-body"></div>
+</section>
+
+<!-- GROWN UPS -->
+<section class="screen" id="grown">
+  <div class="top">
+    <button class="icon-btn" onclick="go('home')">←</button>
+    <h1>Grown-ups corner</h1>
+  </div>
+  <div class="card">
+    <h3>➕ Add / edit a song</h3>
+    <input type="hidden" id="f-id"/>
+    <label>Song name</label>
+    <input id="f-title" placeholder="e.g. Shake It Off"/>
+    <label>Singer</label>
+    <input id="f-artist" placeholder="e.g. Taylor Swift"/>
+    <label>Pick a sticker</label>
+    <div class="emo-pick" id="f-emo"></div>
+    <label>Lyrics (one line per line — paste from the album booklet or a lyrics site)</label>
+    <textarea id="f-lyrics" placeholder="Paste lyrics here…&#10;Blank lines are skipped.&#10;Repeated chorus lines are kept once."></textarea>
+    <p class="hint">Tip: start with just the chorus (6–10 lines). Kids learn faster in small chunks.</p>
+    <label>YouTube link (optional — to play the original)</label>
+    <input id="f-yt" placeholder="https://youtu.be/…"/>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-g" onclick="clearForm()">Clear</button>
+      <button class="btn btn-p" onclick="saveSong()">Save song</button>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🎵 Jiana's songs</h3>
+    <div id="g-list"></div>
+  </div>
+  <div class="card">
+    <h3>🎯 Daily goal</h3>
+    <label>Stars needed to unlock the game</label>
+    <select id="g-goal" onchange="setGoal(this.value)">
+      <option>10</option><option>15</option><option>20</option><option>30</option><option>40</option>
+    </select>
+    <label>Teacher voice</label>
+    <select id="g-voice" onchange="setVoice(this.value)"></select>
+    <div class="row" style="margin-top:12px">
+      <button class="btn btn-g btn-sm" onclick="speak('Hello Jiana! Let\'s sing together!')">🔊 Test voice</button>
+      <button class="btn btn-sun btn-sm" onclick="unlockToday()">🔓 Unlock game today</button>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ════════════ DATA ════════════ */
+const API_URL = 'https://jianaschooltrackercloudflareworkerapiproxydeploy.jubin15.workers.dev';
+const MODELS = ['claude-sonnet-5-5','claude-sonnet-4-20250514'];
+const COLORS = ['#7b3fe4','#ff5fa2','#3d8bff','#2eb872','#ff8a3d','#e0457b','#00a8a8','#8f5cff'];
+const EMOJIS = ['🎤','🎸','🌟','🦄','🌈','💜','🎧','🦋','🌸','🐱','🚀','👑'];
+
+// Public-domain tunes. "syllable:note" — trailing "-" joins to the next syllable.
+const TUNES = [
+  {id:'t-twinkle',title:'Twinkle Twinkle',artist:'Classic',emoji:'⭐',color:'#3d8bff',tune:[
+    'Twin-:C4 kle:C4 twin-:G4 kle:G4 lit-:A4 tle:A4 star,:G4',
+    'how:F4 I:F4 won-:E4 der:E4 what:D4 you:D4 are:C4',
+    'Up:G4 a-:G4 bove:F4 the:F4 world:E4 so:E4 high,:D4',
+    'like:G4 a:G4 dia-:F4 mond:F4 in:E4 the:E4 sky:D4']},
+  {id:'t-bday',title:'Happy Birthday',artist:'Classic',emoji:'🎂',color:'#ff5fa2',tune:[
+    'Hap-:G4 py:G4 birth-:A4 day:G4 to:C5 you:B4',
+    'Hap-:G4 py:G4 birth-:A4 day:G4 to:D5 you:C5',
+    'Hap-:G4 py:G4 birth-:G5 day:E5 dear:C5 Ji-:C5 a-:B4 na:A4',
+    'Hap-:F5 py:F5 birth-:E5 day:C5 to:D5 you:C5']},
+  {id:'t-row',title:'Row Your Boat',artist:'Classic',emoji:'🚣',color:'#00a8a8',tune:[
+    'Row,:C4 row,:C4 row:C4 your:D4 boat:E4',
+    'gent-:E4 ly:D4 down:E4 the:F4 stream:G4',
+    'Mer-:C5 ri-:C5 ly,:C5 mer-:G4 ri-:G4 ly,:G4 mer-:E4 ri-:E4 ly,:E4 mer-:C4 ri-:C4 ly,:C4',
+    'life:G4 is:F4 but:E4 a:D4 dream:C4']},
+  {id:'t-john',title:'Are You Sleeping?',artist:'Classic',emoji:'🔔',color:'#ff8a3d',tune:[
+    'Are:C4 you:D4 sleep-:E4 ing,:C4 are:C4 you:D4 sleep-:E4 ing,:C4',
+    'Bro-:E4 ther:F4 John,:G4 Bro-:E4 ther:F4 John?:G4',
+    'Morn-:G4 ing:A4 bells:G4 are:F4 ring-:E4 ing,:C4 morn-:G4 ing:A4 bells:G4 are:F4 ring-:E4 ing,:C4',
+    'Ding:C4 dang:G3 dong,:C4 ding:C4 dang:G3 dong:C4']},
+  {id:'t-mary',title:'Mary Had a Little Lamb',artist:'Classic',emoji:'🐑',color:'#2eb872',tune:[
+    'Ma-:E4 ry:D4 had:C4 a:D4 lit-:E4 tle:E4 lamb,:E4',
+    'lit-:D4 tle:D4 lamb,:D4 lit-:E4 tle:G4 lamb,:G4',
+    'Ma-:E4 ry:D4 had:C4 a:D4 lit-:E4 tle:E4 lamb,:E4',
+    'its:E4 fleece:D4 was:D4 white:E4 as:D4 snow:C4']},
+];
+TUNES.forEach(t=>{
+  t.builtin=true;
+  t.syl=t.tune.map(l=>l.split(' ').map(p=>{const i=p.lastIndexOf(':');return{s:p.slice(0,i),n:p.slice(i+1)};}));
+  t.lines=t.syl.map(l=>l.map(x=>x.s).join(' ').replace(/- /g,''));
+});
+
+let D = load();
+function load(){
+  let d={};
+  try{d=JSON.parse(localStorage.getItem('jiana-songs-v1'))||{};}catch(e){}
+  return Object.assign({songs:[],prog:{},days:{},goal:15,voice:''},d);
+}
+function save(){try{localStorage.setItem('jiana-songs-v1',JSON.stringify(D));}catch(e){}}
+const today=()=>new Date().toLocaleDateString('en-CA');
+function day(k=today()){return D.days[k]||(D.days[k]={stars:0,secs:0,best:{},unlocked:false});}
+function allSongs(){return [...D.songs,...TUNES];}
+function getSong(id){return allSongs().find(s=>s.id===id);}
+function songStars(id){const p=D.prog[id]||{};let t=0;for(const m in p)for(const l in p[m])t+=p[m][l];return t;}
+function modeStars(id,m){const p=(D.prog[id]||{})[m]||{};return Object.values(p).reduce((a,b)=>a+b,0);}
+function goalMet(k=today()){const d=D.days[k];return !!d&&(d.stars>=D.goal||d.unlocked);}
+function streak(){let n=0;const dt=new Date();if(!goalMet())dt.setDate(dt.getDate()-1);
+  while(goalMet(dt.toLocaleDateString('en-CA'))){n++;dt.setDate(dt.getDate()-1);}return n;}
+
+function award(songId,mode,line,stars){
+  D.prog[songId]=D.prog[songId]||{};
+  const pm=D.prog[songId][mode]=D.prog[songId][mode]||{};
+  pm[line]=Math.max(pm[line]||0,stars);
+  const d=day(),key=songId+'|'+mode+'|'+line,prev=d.best[key]||0;   // only today's improvement counts
+  if(stars>prev){const was=goalMet();d.stars+=stars-prev;d.best[key]=stars;if(!was&&goalMet())setTimeout(()=>{confetti();toast('🎉 Goal done! Balloon game unlocked!');},600);}
+  save();
+}
+
+/* ════════════ NAV ════════════ */
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));window.scrollTo(0,0);
+  if(id==='home')renderHome();}
+function toast(t,ms=2600){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),ms);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ════════════ HOME ════════════ */
+function renderHome(){
+  const d=day(),pct=Math.min(1,d.stars/D.goal),C=2*Math.PI*38;
+  document.getElementById('ring').innerHTML=`<svg width="86" height="86"><circle cx="43" cy="43" r="38" stroke="rgba(255,255,255,.25)" stroke-width="9" fill="none"/><circle cx="43" cy="43" r="38" stroke="#ffc93c" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" style="transition:stroke-dashoffset .6s"/></svg><b><div>${d.stars}<span>of ${D.goal} ⭐</span></div></b>`;
+  const left=Math.max(0,D.goal-d.stars);
+  document.getElementById('hero-h').textContent=goalMet()?'Superstar day! 🌟':d.stars?'Keep going!':'Let\'s earn stars!';
+  document.getElementById('hero-p').textContent=goalMet()?'You finished today\'s practice.':`${left} more star${left===1?'':'s'} to unlock the balloon game`;
+  const mins=Math.round(d.secs/60),st=streak();
+  document.getElementById('hero-chips').innerHTML=`<span class="chip">🔥 ${st} day streak</span><span class="chip">⏱ ${mins} min today</span>`;
+  const rw=document.getElementById('reward');
+  if(goalMet()){rw.className='reward open';rw.innerHTML=`<div class="em">🎈</div><div><h3>Balloon Pop is open!</h3><p>Pop balloons, play music notes</p></div><button class="btn btn-sun btn-sm go" onclick="startGame()">Play</button>`;}
+  else{rw.className='reward';rw.innerHTML=`<div class="em">🔒</div><div><h3>Balloon Pop game</h3><p>Unlocks when you earn ${D.goal} stars today</p></div>`;}
+  const card=s=>{const st=songStars(s.id);return `<button class="song" style="background:${s.color}" onclick="openSong('${s.id}')"><span class="em">${s.emoji}</span>${st?`<span class="badge">⭐ ${st}</span>`:''}<h4>${esc(s.title)}</h4><small>${esc(s.artist||'')}</small></button>`;};
+  document.getElementById('my-songs').innerHTML=D.songs.map(card).join('')+
+    `<button class="song add-song" onclick="openGrown()"><span class="em">➕</span><h4>Add my favourite song</h4><small style="color:var(--text3)">ask a grown-up</small></button>`;
+  document.getElementById('tune-songs').innerHTML=TUNES.map(card).join('');
+}
+
+/* ════════════ SONG PAGE ════════════ */
+let cur=null;
+const MODES=[
+  {k:'listen',em:'👂',t:'Listen',d:'Teacher sings it to you'},
+  {k:'echo',em:'🦜',t:'Echo me',d:'Hear a line, sing it back',need:null},
+  {k:'fill',em:'🧩',t:'Fill the gaps',d:'Some words go missing!',need:'echo'},
+  {k:'memory',em:'🧠',t:'Super memory',d:'Sing it with no words',need:'fill'},
+];
+function unlockedMode(s,m){if(!m.need)return true;const n=s.lines.length;return modeStars(s.id,m.need)>=Math.ceil(n*1.5);}
+function openSong(id){
+  cur=getSong(id);if(!cur)return;
+  document.getElementById('song-title-top').textContent=cur.title;
+  document.getElementById('song-head').style.background=cur.color;
+  document.getElementById('song-head').innerHTML=`<div style="font-size:40px">${cur.emoji}</div><h2>${esc(cur.title)}</h2><p>${esc(cur.artist||'')} · ${cur.lines.length} lines · ⭐ ${songStars(cur.id)}</p>`;
+  let h='';
+  if(cur.tune)h+=`<button class="mode wide" onclick="startTune()"><span class="em">🎯</span><h4>Sing on the note</h4><p>The mic listens to your voice and tells you: higher, lower or perfect!</p><div class="st">⭐ ${modeStars(cur.id,'tune')}</div></button>`;
+  MODES.forEach(m=>{const ok=unlockedMode(cur,m);
+    h+=`<button class="mode ${ok?'':'locked'}" onclick="${ok?`startMode('${m.k}')`:`toast('🔒 Earn more stars in the step before to unlock!')`}"><span class="em">${ok?m.em:'🔒'}</span><h4>${m.t}</h4><p>${m.d}</p>${m.k!=='listen'?`<div class="st">⭐ ${modeStars(cur.id,m.k)} / ${cur.lines.length*3}</div>`:''}</button>`;});
+  document.getElementById('modes').innerHTML=h;
+  renderExtra();
+  go('song');
+}
+function renderExtra(){
+  let h='';
+  const yt=ytId(cur.youtube);
+  if(yt)h+=`<div class="card"><h3>📺 The real song</h3><div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/${yt}" allow="encrypted-media" allowfullscreen></iframe></div></div>`;
+  if(!cur.builtin){
+    if(cur.tips)h+=tipsHTML(cur.tips);
+    else h+=`<button class="btn btn-p full" id="tip-btn" onclick="askTeacher()" style="margin-bottom:12px">✨ Ask Teacher: tricky words & singing tips</button>`;
+  }
+  document.getElementById('song-extra').innerHTML=h;
+}
+function ytId(u){if(!u)return'';const m=u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);return m?m[1]:'';}
+function tipsHTML(t){
+  return `<div class="card tips"><h3>✨ Teacher's notes</h3>${t.intro?`<p style="margin-bottom:8px">${esc(t.intro)}</p>`:''}
+  ${(t.words||[]).map(w=>`<div class="w"><b>${esc(w.word)}</b><div>${esc(w.meaning)}${w.say?`<br><small style="color:var(--text3)">say: ${esc(w.say)}</small>`:''}</div></div>`).join('')}
+  ${t.tip?`<p style="margin-top:8px">🎤 ${esc(t.tip)}</p>`:''}</div>`;
+}
+async function askTeacher(){
+  const b=document.getElementById('tip-btn');b.disabled=true;b.innerHTML='<div class="spin"></div> Teacher is reading…';
+  const prompt=`You are a warm, fun singing teacher for Jiana, a 9-year-old girl in Mumbai who loves English songs.
+Song: "${cur.title}" by ${cur.artist||'unknown'}. Lyrics (provided by her parent):
+${cur.lines.join('\n')}
+
+Return ONLY valid JSON, no markdown:
+{"intro":"1-2 sentences: what this song is about, in kid-friendly words","words":[{"word":"tricky word or phrase from the lyrics","meaning":"simple meaning for a 9 year old","say":"easy pronunciation guide"}],"tip":"one practical singing/breathing tip for this song"}
+Pick 4-6 words/phrases that are hard to understand or pronounce. Keep everything positive and age-appropriate. Do not repeat or write out the lyrics.`;
+  let err='';
+  for(const model of MODELS){
+    try{
+      const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model,max_tokens:900,messages:[{role:'user',content:prompt}]})});
+      const data=await r.json();
+      if(!data.content){err=data.error?data.error.message:'No reply';continue;}
+      const txt=data.content.map(c=>c.text||'').join('');
+      cur.tips=JSON.parse(txt.replace(/```json|```/g,'').trim());
+      save();renderExtra();return;
+    }catch(e){err=e.message;}
+  }
+  b.disabled=false;b.textContent='✨ Ask Teacher: tricky words & singing tips';toast('Teacher couldn\'t answer: '+err,4000);
+}
+
+/* ════════════ VOICE (TTS) ════════════ */
+let voices=[];
+function loadVoices(){voices=(speechSynthesis.getVoices()||[]).filter(v=>/^en/i.test(v.lang));
+  const sel=document.getElementById('g-voice');if(!sel)return;
+  sel.innerHTML=voices.map(v=>`<option ${v.name===D.voice?'selected':''}>${esc(v.name)}</option>`).join('');}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function pickVoice(){if(!voices.length)loadVoices();
+  return voices.find(v=>v.name===D.voice)||voices.find(v=>/female|samantha|zira|google uk english female|karen|moira|tessa|veena/i.test(v.name))||voices.find(v=>/en-(GB|IN|US)/i.test(v.lang))||voices[0];}
+function setVoice(n){D.voice=n;save();}
+function speak(text,{rate=.85,onWord,onEnd}={}){
+  if(!('speechSynthesis' in window)){onEnd&&onEnd();return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);const v=pickVoice();if(v){u.voice=v;u.lang=v.lang;}
+  u.rate=rate;u.pitch=1.15;
+  let bounded=false,timer=null;
+  if(onWord){
+    u.onboundary=e=>{if(e.name&&e.name!=='word')return;bounded=true;clearInterval(timer);onWord(text.slice(0,e.charIndex).split(/\s+/).filter(Boolean).length);};
+    u.onstart=()=>{let i=0;const n=text.split(/\s+/).length;timer=setInterval(()=>{if(bounded){clearInterval(timer);return;}onWord(i++);if(i>=n)clearInterval(timer);},380/rate);};
+  }
+  u.onend=()=>{clearInterval(timer);onEnd&&onEnd();};
+  u.onerror=()=>{clearInterval(timer);onEnd&&onEnd();};
+  speechSynthesis.speak(u);
+}
+
+/* ════════════ SPEECH RECOGNITION ════════════ */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null;
+function hear(onPartial,onDone){
+  if(!SR){onDone(null);return;}
+  const r=rec=new SR();r.lang='en-IN';r.interimResults=true;r.continuous=true;r.maxAlternatives=3;
+  let txt='',finalTxt='',silence=null,ended=false;
+  const finish=()=>{if(ended)return;ended=true;clearTimeout(silence);if(rec!==r)return;rec=null;try{r.stop();}catch(e){}onDone((finalTxt+' '+txt).trim());};
+  r.onresult=e=>{if(rec!==r)return;txt='';finalTxt='';
+    for(let i=0;i<e.results.length;i++){const alts=[...e.results[i]].map(a=>a.transcript).join(' ');if(e.results[i].isFinal)finalTxt+=' '+alts;else txt+=' '+e.results[i][0].transcript;}
+    onPartial((finalTxt+' '+txt).trim());clearTimeout(silence);silence=setTimeout(finish,1800);};
+  r.onerror=e=>{if(e.error==='not-allowed'){toast('Please allow the microphone 🎤');}finish();};
+  r.onend=finish;
+  try{r.start();}catch(e){finish();}
+  silence=setTimeout(finish,7000);
+  return finish;
+}
+const norm=s=>s.toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(Boolean);
+function lev(a,b){const m=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=m[0];m[0]=i;for(let j=1;j<=b.length;j++){const t=m[j];m[j]=Math.min(m[j]+1,m[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t;}}return m[b.length];}
+function matchWords(target,heardText){ // one result per space-separated token of the line
+  const h=norm(heardText||'');
+  return target.split(/\s+/).map(tok=>{const ws=norm(tok);if(!ws.length)return true;
+    return ws.every(w=>h.some(x=>x===w||(w.length>3&&lev(x,w)<=1)||(w.length>6&&lev(x,w)<=2)));});
+}
+const starsFor=p=>p>=.85?3:p>=.6?2:p>=.3?1:0;
+
+/* ════════════ PRACTICE (lyrics) ════════════ */
+let P=null,tick=null;
+function startTimer(){clearInterval(tick);tick=setInterval(()=>{if(document.hidden)return;day().secs++;if(day().secs%10===0)save();},1000);}
+function exitPractice(){stopAll();clearInterval(tick);save();openSong(cur.id);}
+function stopAll(){try{speechSynthesis.cancel();}catch(e){}if(rec){const r=rec;rec=null;try{r.abort();}catch(e){}}stopMic();stopTune();}
+
+function startMode(k){
+  P={mode:k,i:0,got:[]};startTimer();
+  document.getElementById('p-title').textContent=MODES.find(m=>m.k===k).em+' '+MODES.find(m=>m.k===k).t;
+  go('practice');
+  if(k==='listen')return renderListen();
+  renderLine();
+}
+function renderDots(n,i,doneArr){document.getElementById('p-dots').innerHTML=Array.from({length:n},(_,j)=>`<i class="${j===i?'cur':doneArr[j]?'done':''}"></i>`).join('');}
+
+function renderListen(){
+  document.getElementById('p-dots').innerHTML='';
+  const tune=!!cur.tune;
+  document.getElementById('p-body').innerHTML=`
+    <div class="row" style="margin-bottom:12px"><button class="btn btn-pink" id="play-all" onclick="playAll()">▶ Play the whole song</button></div>
+    <p class="hint" style="margin-bottom:10px;text-align:center">Tap any line to hear it again. Sing along softly!</p>
+    <div class="listen-list">${cur.lines.map((l,i)=>`<button class="ln" id="ln${i}" onclick="playLine(${i})">${esc(l)}</button>`).join('')}</div>
+    <button class="btn btn-ok full" style="margin-top:12px" onclick="finishListen()">I listened! Next: Echo me 🦜</button>`;
+  if(tune)document.getElementById('play-all').textContent='▶ Play the tune';
+}
+function hiLine(i){document.querySelectorAll('.listen-list .ln').forEach((e,j)=>e.classList.toggle('hi',j===i));}
+function playLine(i,done){hiLine(i);
+  if(cur.tune)playMelody(cur.syl[i],null,()=>{hiLine(-1);done&&done();});
+  else speak(cur.lines[i],{onEnd:()=>{hiLine(-1);done&&done();}});}
+function playAll(){let i=0;const nx=()=>{if(i>=cur.lines.length||!document.getElementById('practice').classList.contains('on'))return;document.getElementById('ln'+i).scrollIntoView({block:'center',behavior:'smooth'});playLine(i++,()=>setTimeout(nx,350));};nx();}
+function finishListen(){award(cur.id,'listen',0,1);stopAll();startMode('echo');}
+
+function hiddenIdx(line,mode){
+  const w=line.split(/\s+/);
+  if(mode==='memory')return w.map((_,i)=>i>0);
+  return w.map((x,i)=>norm(x).join('').length>=3&&(i%3===1||(w.length<=4&&i===w.length-1)));
+}
+function lineHTML(line,state){ // state: {hide:[], res:[], hi:-1}
+  const w=line.split(/\s+/);
+  return w.map((x,i)=>{let c='';
+    if(state.res&&state.res[i]===true)c='ok';else if(state.res&&state.res[i]===false&&!(state.hide&&state.hide[i]))c='miss';
+    if(state.hide&&state.hide[i])c+=' blank'+(state.res&&state.res[i]?' ok':'');
+    if(state.hi===i)c+=' hi';
+    return `<span class="${c}">${esc(x)}</span>`;}).join(' ');
+}
+function renderLine(){
+  const n=cur.lines.length,i=P.i,line=cur.lines[i];
+  renderDots(n,i,P.got);
+  const hide=P.mode==='echo'?null:hiddenIdx(line,P.mode);
+  P.hide=hide;P.res=null;
+  const prompt={echo:'Listen, then sing it back!',fill:'Sing the whole line — fill the gaps!',memory:'Can you remember this line?'}[P.mode];
+  document.getElementById('p-body').innerHTML=`
+    <div class="stage">
+      <div class="teacher">🎵 ${prompt}</div>
+      <div class="lyric" id="lyric">${lineHTML(line,{hide})}</div>
+      <div class="heard" id="heard"></div>
+      <div class="stars" id="stars"></div>
+    </div>
+    <div class="row" style="margin-bottom:14px">
+      <button class="btn btn-g" onclick="hearLine()">🔊 Hear it</button>
+      <button class="btn btn-g" onclick="P.mode==='memory'?peek():hint()">${P.mode==='memory'?'👀 Peek':'💡 Hint'}</button>
+    </div>
+    <button class="mic" id="mic" onclick="yourTurn()">🎤</button>
+    <p class="hint" style="text-align:center;margin:8px 0 14px" id="mic-lbl">Tap the mic and sing!</p>
+    <div class="row"><button class="btn btn-g" onclick="nextLine(true)" ${i===0?'disabled style="opacity:.4"':''}>◀ Back</button><button class="btn btn-p" id="next-btn" onclick="nextLine()">Next ▶</button></div>`;
+  if(P.mode==='echo')setTimeout(hearLine,350);
+}
+function hearLine(){
+  const line=cur.lines[P.i];
+  if(cur.tune){playMelody(cur.syl[P.i]);return;}
+  speak(line,{onWord:k=>{const el=document.getElementById('lyric');if(el)el.innerHTML=lineHTML(line,{hide:P.hide,res:P.res,hi:k});},
+    onEnd:()=>{const el=document.getElementById('lyric');if(el)el.innerHTML=lineHTML(line,{hide:P.hide,res:P.res});}});
+}
+function hint(){const w=cur.lines[P.i].split(/\s+/);const j=(P.hide||[]).findIndex((h,k)=>h&&!(P.res&&P.res[k]));
+  if(j<0){toast('No gaps left — sing it!');return;}toast('💡 It starts with "'+w[j].replace(/[^\w']/g,'').slice(0,2)+'…"');}
+function peek(){const el=document.getElementById('lyric');el.innerHTML=lineHTML(cur.lines[P.i],{});P.peeked=true;setTimeout(()=>{if(el.isConnected)el.innerHTML=lineHTML(cur.lines[P.i],{hide:P.hide,res:P.res});},1800);}
+function yourTurn(){
+  stopAll();
+  const mic=document.getElementById('mic'),lbl=document.getElementById('mic-lbl'),heard=document.getElementById('heard');
+  if(!SR){ // fallback: honest self-check
+    heard.textContent='';lbl.innerHTML='Did you sing it all? <button class="btn btn-ok btn-sm" onclick="selfMark(3)">Yes! ✅</button> <button class="btn btn-g btn-sm" onclick="selfMark(1)">Almost</button>';return;}
+  mic.classList.add('live');lbl.textContent='Listening… sing now!';heard.textContent='';
+  hear(t=>{if(heard.isConnected)heard.textContent='"'+t+'"';},t=>{if(!mic.isConnected)return;mic.classList.remove('live');lbl.textContent='Tap the mic to try again';grade(t||'');});
+}
+function selfMark(s){showStars(s);}
+function grade(t){
+  const line=cur.lines[P.i],res=matchWords(line,t);P.res=res;
+  let pool=res.map((r,k)=>({r,k}));
+  if(P.hide)pool=pool.filter(x=>P.hide[x.k]||P.mode==='memory');
+  const pct=pool.length?pool.filter(x=>x.r).length/pool.length:0;
+  let s=starsFor(pct);if(P.mode==='memory'&&P.peeked&&s>2)s=2;
+  document.getElementById('lyric').innerHTML=lineHTML(line,{hide:P.hide,res});
+  if(!t){document.getElementById('heard').textContent='I couldn\'t hear you — try a bit louder 🙂';return;}
+  showStars(s);
+}
+const CHEERS=['Amazing! 🌟','Wow, superstar!','You nailed it!','Beautiful singing!','Rockstar! 🎸'];
+function showStars(s){
+  const line=cur.lines[P.i];
+  document.getElementById('stars').innerHTML=[0,1,2].map(k=>`<span class="s" style="animation-delay:${k*.12}s">${k<s?'⭐':'☆'}</span>`).join('');
+  const msg=s===3?CHEERS[Math.random()*CHEERS.length|0]:s===2?'So close! One more try for 3 stars?':s===1?'Good start! Hear it again and retry.':'Let\'s listen once more!';
+  document.getElementById('heard').textContent=msg;
+  if(s>0){award(cur.id,P.mode,P.i,s);P.got[P.i]=true;renderDots(cur.lines.length,P.i,P.got);}
+  if(s===3){chime();if(P.mode!=='echo')document.getElementById('lyric').innerHTML=lineHTML(line,{res:line.split(/\s+/).map(()=>true)});}
+  if(s>=2)document.getElementById('next-btn').classList.replace('btn-p','btn-ok');
+}
+function nextLine(back){stopAll();P.peeked=false;
+  if(back){P.i=Math.max(0,P.i-1);renderLine();return;}
+  if(P.i<cur.lines.length-1){P.i++;renderLine();}else celebrate();}
+function celebrate(){
+  stopAll();const m=P.mode,st=modeStars(cur.id,m),max=cur.lines.length*3;
+  const next=MODES[MODES.findIndex(x=>x.k===m)+1];
+  document.getElementById('p-dots').innerHTML='';
+  document.getElementById('p-body').innerHTML=`<div class="party"><div class="big">${st>=max*.8?'🏆':'🎉'}</div><h2>${st>=max*.8?'Song master!':'Great practice!'}</h2><p>You have ⭐ ${st} of ${max} in this round.</p>
+   <div style="margin-top:20px;display:grid;gap:10px">
+   ${next&&unlockedMode(cur,next)?`<button class="btn btn-p full" onclick="startMode('${next.k}')">Next: ${next.em} ${next.t}</button>`:''}
+   <button class="btn btn-g full" onclick="startMode('${m}')">🔁 Do it again</button>
+   <button class="btn btn-g full" onclick="exitPractice()">Back to song</button></div></div>`;
+  confetti();
+}
+
+/* ════════════ AUDIO: synth + pitch ════════════ */
+let AC=null;
+function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC;}
+const NAMES={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function midi(n){const m=n.match(/^([A-G])(#|b)?(\d)$/);return 12*(+m[3]+1)+NAMES[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0);}
+const mfreq=m=>440*Math.pow(2,(m-69)/12);
+function tone(m,dur=.45,when=0,vol=.25){const a=ac(),t=a.currentTime+when;
+  const o=a.createOscillator(),o2=a.createOscillator(),g=a.createGain();
+  o.type='triangle';o2.type='sine';o.frequency.value=o2.frequency.value=mfreq(m);o2.frequency.value*=2;
+  const g2=a.createGain();g2.gain.value=.15;o2.connect(g2).connect(g);o.connect(g);g.connect(a.destination);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05);}
+function chime(){[72,76,79,84].forEach((m,i)=>tone(m,.3,i*.08,.15));}
+let melT=[];
+function stopTune(){melT.forEach(clearTimeout);melT=[];}
+function playMelody(syl,onIdx,onEnd){stopTune();const beat=.5;
+  syl.forEach((x,i)=>{const last=i===syl.length-1,d=last?beat*1.6:beat;
+    melT.push(setTimeout(()=>{tone(midi(x.n),d*.95);onIdx&&onIdx(i);},i*beat*1000));});
+  melT.push(setTimeout(()=>onEnd&&onEnd(),(syl.length*beat+.6)*1000));}
+
+let mic=null;
+async function startMic(){
+  const a=ac();
+  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:false,autoGainControl:false}});
+  const src=a.createMediaStreamSource(stream),an=a.createAnalyser();an.fftSize=2048;src.connect(an);
+  mic={stream,an,buf:new Float32Array(an.fftSize)};
+}
+function stopMic(){if(mic){mic.stream.getTracks().forEach(t=>t.stop());mic=null;}cancelAnimationFrame(raf);}
+function pitch(){ // autocorrelation
+  const b=mic.buf;mic.an.getFloatTimeDomainData(b);const sr=ac().sampleRate;
+  let rms=0;for(const v of b)rms+=v*v;rms=Math.sqrt(rms/b.length);if(rms<.015)return -1;
+  let r1=0,r2=b.length-1;const th=.2;
+  for(let i=0;i<b.length/2;i++)if(Math.abs(b[i])<th){r1=i;break;}
+  for(let i=1;i<b.length/2;i++)if(Math.abs(b[b.length-i])<th){r2=b.length-i;break;}
+  const x=b.slice(r1,r2),n=Math.min(x.length,Math.ceil(sr/70)+2),c=new Float32Array(n),L=x.length;
+  for(let i=0;i<n;i++){let s=0;for(let j=0;j<L-i;j++)s+=x[j]*x[j+i];c[i]=s;}
+  let d=0;while(d<n-1&&c[d]>c[d+1])d++;
+  let mx=-1,mp=-1;for(let i=d;i<n;i++)if(c[i]>mx){mx=c[i];mp=i;}
+  if(mp<1||mp>=n-1)return -1;
+  const y1=c[mp-1],y2=c[mp],y3=c[mp+1],A=(y1+y3-2*y2)/2,B=(y3-y1)/2;
+  const T=A?mp-B/(2*A):mp,f=sr/T;
+  return f>70&&f<1200?f:-1;
+}
+
+/* ════════════ TUNE MODE ════════════ */
+let T=null,raf=0;
+async function startTune(){
+  stopAll();startTimer();
+  T={line:0,k:0,hold:0,last:performance.now(),lineStart:performance.now(),miss:0,got:[]};
+  document.getElementById('p-title').textContent='🎯 Sing on the note';
+  go('practice');
+  document.getElementById('p-body').innerHTML=`<div class="stage"><div class="teacher">🎤 Tap start and allow the microphone</div><button class="btn btn-pink" onclick="beginTune()">Start singing</button><p class="hint">Sing in any comfy voice — high or low both count. Use headphones for best results.</p></div>`;
+  renderDots(cur.lines.length,0,[]);
+}
+async function beginTune(){
+  try{await startMic();}catch(e){toast('Microphone blocked — please allow it in browser settings 🎤',4000);return;}
+  renderTuneLine();loop();
+}
+function renderTuneLine(){
+  const syl=cur.syl[T.line];
+  renderDots(cur.lines.length,T.line,T.got);
+  document.getElementById('p-body').innerHTML=`
+   <div class="stage" style="gap:12px">
+    <div class="bubbles" id="bubs">${syl.map((x,i)=>`<div class="bub" id="b${i}">${esc(x.s.replace(/-$/,''))}<small>${x.n.replace(/\d/,'')}</small></div>`).join('')}</div>
+    <div class="meter"><div class="zone"></div><span class="lbl" style="top:6px">⬆ too high</span><span class="lbl" style="bottom:6px">⬇ too low</span><div class="ball" id="ball">🎵</div></div>
+    <div class="hold"><i id="hold"></i></div>
+    <div class="teacher" id="tfb">Sing "${esc(syl[0].s.replace(/-$/,''))}"</div>
+    <div class="stars" id="stars"></div>
+   </div>
+   <div class="row"><button class="btn btn-g" onclick="playMelody(cur.syl[T.line],i=>markBub(i))">🔊 Hear line</button><button class="btn btn-g" onclick="tone(midi(cur.syl[T.line][T.k].n),.8)">🎹 Hear note</button></div>
+   <button class="btn btn-g full" style="margin-top:8px" onclick="skipSyl()">Skip this one ▶</button>`;
+  T.k=0;T.hold=0;T.miss=0;T.lineStart=performance.now();markBub(0);
+}
+function markBub(i){const syl=cur.syl[T.line];syl.forEach((_,j)=>{const b=document.getElementById('b'+j);if(b)b.className='bub'+(j<T.k?' done':j===(i??T.k)?' cur':'');});}
+function skipSyl(){T.miss+=2;advanceSyl();}
+function advanceSyl(){
+  const syl=cur.syl[T.line];T.k++;T.hold=0;
+  if(T.k<syl.length){markBub();document.getElementById('tfb').textContent=`Sing "${syl[T.k].s.replace(/-$/,'')}"`;return;}
+  markBub(-1);
+  const secs=(performance.now()-T.lineStart)/1000/syl.length;
+  let s=3;if(secs>3)s--;if(T.miss>=2)s--;if(T.miss>=syl.length)s=1;s=Math.max(1,s);
+  award(cur.id,'tune',T.line,s);T.got[T.line]=true;chime();
+  document.getElementById('stars').innerHTML=[0,1,2].map(k=>`<span class="s" style="animation-delay:${k*.12}s">${k<s?'⭐':'☆'}</span>`).join('');
+  document.getElementById('tfb').textContent=s===3?CHEERS[Math.random()*CHEERS.length|0]:'Nice! Next line…';
+  T.pause=true;
+  setTimeout(()=>{T.pause=false;
+    if(T.line<cur.lines.length-1){T.line++;renderTuneLine();}
+    else{stopMic();P={mode:'tune'};celebrateTune();}},1600);
+}
+function celebrateTune(){const st=modeStars(cur.id,'tune'),max=cur.lines.length*3;document.getElementById('p-dots').innerHTML='';
+  document.getElementById('p-body').innerHTML=`<div class="party"><div class="big">🎯</div><h2>Perfect pitch power!</h2><p>⭐ ${st} of ${max} on this tune.</p><div style="margin-top:20px;display:grid;gap:10px"><button class="btn btn-p full" onclick="startTune()">🔁 Sing it again</button><button class="btn btn-g full" onclick="exitPractice()">Back to song</button></div></div>`;confetti();}
+function loop(){
+  raf=requestAnimationFrame(loop);
+  if(!mic||T.pause)return;
+  const now=performance.now(),dt=now-T.last;T.last=now;
+  const f=pitch(),ball=document.getElementById('ball'),hold=document.getElementById('hold'),fb=document.getElementById('tfb');
+  if(!ball)return;
+  if(f<0){ball.classList.remove('on','good');T.hold=Math.max(0,T.hold-dt*.5);hold.style.width=(T.hold/350*100)+'%';return;}
+  const target=midi(cur.syl[T.line][T.k].n);
+  let diff=12*Math.log2(f/mfreq(target));diff=((diff%12)+18)%12-6; // fold octaves → kids can sing any octave
+  ball.classList.add('on');
+  ball.style.top=(50-Math.max(-6,Math.min(6,diff))/6*45)+'%';
+  const good=Math.abs(diff)<1;
+  ball.classList.toggle('good',good);
+  if(good){T.hold+=dt;fb.textContent='Perfect! Hold it… ✨';}
+  else{T.hold=Math.max(0,T.hold-dt);fb.textContent=diff<0?'A little higher ⬆':'A little lower ⬇';if(Math.abs(diff)>3)T.miss+=dt/4000;}
+  hold.style.width=Math.min(100,T.hold/350*100)+'%';
+  if(T.hold>=350)advanceSyl();
+}
+
+/* ════════════ REWARD GAME ════════════ */
+function startGame(){
+  if(!goalMet()){toast('🔒 Earn today\'s stars first!');return;}
+  const g=document.createElement('div');g.className='game';
+  g.innerHTML=`<div class="hud"><span id="g-score">🎈 0</span><span id="g-time">⏱ 45</span><button class="icon-btn" id="g-x">✕</button></div>`;
+  document.body.appendChild(g);
+  const scale=[60,62,64,65,67,69,71,72,74,76];let score=0,left=45;
+  const spawn=()=>{const b=document.createElement('div');b.className='balloon';
+    const n=scale[Math.random()*scale.length|0];b.style.background=COLORS[Math.random()*COLORS.length|0];
+    b.style.left=(5+Math.random()*75)+'%';b.style.animationDuration=(4+Math.random()*3)+'s';
+    b.textContent=['C','D','E','F','G','A','B'][n%12===0?0:[0,2,4,5,7,9,11].indexOf(n%12)];
+    b.onpointerdown=e=>{tone(n,.5);score++;document.getElementById('g-score').textContent='🎈 '+score;
+      const bm=document.createElement('div');bm.className='boom';bm.textContent='💥';bm.style.left=e.clientX-20+'px';bm.style.top=e.clientY-20+'px';g.appendChild(bm);setTimeout(()=>bm.remove(),400);b.remove();};
+    b.addEventListener('animationend',()=>b.remove());g.appendChild(b);};
+  const sp=setInterval(spawn,650),tm=setInterval(()=>{left--;document.getElementById('g-time').textContent='⏱ '+left;if(left<=0)end();},1000);
+  function end(){clearInterval(sp);clearInterval(tm);g.querySelectorAll('.balloon').forEach(b=>b.remove());
+    const best=D.best=Math.max(D.best||0,score);save();
+    const r=document.createElement('div');r.className='party';r.style.cssText='position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;';
+    r.innerHTML=`<div class="big">🎈</div><h2>${score} pops!</h2><p>Best ever: ${best}</p><div style="margin:20px auto 0;display:grid;gap:10px;width:220px"><button class="btn btn-sun" id="g-again">Play again</button><button class="btn btn-g" id="g-done">Done</button></div>`;
+    g.appendChild(r);r.querySelector('#g-again').onclick=()=>{g.remove();startGame();};r.querySelector('#g-done').onclick=()=>g.remove();}
+  g.querySelector('#g-x').onclick=()=>{clearInterval(sp);clearInterval(tm);g.remove();};
+}
+function confetti(){const e=['🎉','⭐','🎵','💜','🌟','🎶'];for(let i=0;i<28;i++){const c=document.createElement('div');c.className='confetti';c.textContent=e[i%e.length];c.style.left=Math.random()*100+'vw';c.style.animationDuration=(1.8+Math.random()*1.6)+'s';c.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4200);}}
+
+/* ════════════ GROWN-UPS ════════════ */
+function gate(){const a=11+(Math.random()*8|0),b=12+(Math.random()*7|0);const r=prompt(`Grown-ups only 🙂\nWhat is ${a} × ${b}?`);return r!==null&&+r===a*b;}
+let pickedEmo=EMOJIS[0];
+function openGrown(){
+  if(!sessionStorage.getItem('gu')){if(!gate()){toast('Ask a grown-up to help!');return;}sessionStorage.setItem('gu','1');}
+  document.getElementById('g-goal').value=D.goal;loadVoices();renderEmo();renderGList();go('grown');
+}
+function renderEmo(){document.getElementById('f-emo').innerHTML=EMOJIS.map(e=>`<button class="${e===pickedEmo?'sel':''}" onclick="pickedEmo='${e}';renderEmo()">${e}</button>`).join('');}
+function renderGList(){
+  document.getElementById('g-list').innerHTML=D.songs.length?D.songs.map(s=>`<div class="list-item"><span>${s.emoji} ${esc(s.title)}</span><button class="btn btn-g btn-sm" onclick="editSong('${s.id}')">Edit</button><button class="btn btn-g btn-sm" onclick="delSong('${s.id}')">🗑</button></div>`).join(''):'<p class="hint">No songs yet — add her favourite above.</p>';
+}
+function clearForm(){['f-id','f-title','f-artist','f-lyrics','f-yt'].forEach(i=>document.getElementById(i).value='');pickedEmo=EMOJIS[0];renderEmo();}
+function editSong(id){const s=D.songs.find(x=>x.id===id);if(!s)return;
+  document.getElementById('f-id').value=s.id;document.getElementById('f-title').value=s.title;document.getElementById('f-artist').value=s.artist||'';
+  document.getElementById('f-lyrics').value=s.lines.join('\n');document.getElementById('f-yt').value=s.youtube||'';pickedEmo=s.emoji;renderEmo();window.scrollTo(0,0);}
+function delSong(id){if(!confirm('Delete this song and its stars?'))return;D.songs=D.songs.filter(s=>s.id!==id);delete D.prog[id];save();renderGList();}
+function saveSong(){
+  const title=document.getElementById('f-title').value.trim();
+  const seen=new Set(),lines=[];
+  document.getElementById('f-lyrics').value.split('\n').forEach(l=>{
+    l=l.replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim();   // drop [Chorus] tags
+    if(!l)return;const k=norm(l).join(' ');if(!k||seen.has(k))return;seen.add(k);lines.push(l);});
+  if(!title||!lines.length){toast('Add a song name and lyrics');return;}
+  const id=document.getElementById('f-id').value;
+  const ex=D.songs.find(s=>s.id===id);
+  const data={title,artist:document.getElementById('f-artist').value.trim(),emoji:pickedEmo,lines,youtube:document.getElementById('f-yt').value.trim()};
+  if(ex){if(ex.lines.join('\n')!==lines.join('\n')){D.prog[ex.id]={};delete ex.tips;}Object.assign(ex,data);}
+  else D.songs.unshift(Object.assign({id:'s'+Date.now(),color:COLORS[D.songs.length%COLORS.length]},data));
+  save();clearForm();renderGList();toast('Saved! 🎵 '+lines.length+' lines');
+}
+function setGoal(v){D.goal=+v;save();}
+function unlockToday(){day().unlocked=true;save();toast('Game unlocked for today 🎈');}
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){try{speechSynthesis.cancel();}catch(e){}}});
+renderHome();
+</script>
+</body>
+</html>
