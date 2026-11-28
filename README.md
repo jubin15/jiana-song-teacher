@@ -1,14 +1,10 @@
-# Jiana's Song Teacher 🎤
+# Jiana's Music School 🎤
 
-A phone app (PWA) that teaches songs to a 9-year-old.
+A Western vocal course for kids that runs as a phone app (PWA), with a teacher, Ms. Melody.
 
-- **Voice school** – 11 step-by-step lessons like classical riyaz: find your own Sa, then Sa Re Ga → aaroh/avroh → alankars → long notes → first song in sargam. Toggle Sa Re Ga / Do Re Mi.
-- **My songs** – a grown-up pastes lyrics; she learns line by line: Listen → Echo me → Fill the gaps → Super memory. The mic scores each line (⭐⭐⭐).
-- **Sing on the note** – mic pitch tracker for classic tunes (higher / lower / perfect).
-- **Daily goal** – earn stars to open the Concert stage. Streaks + practice minutes.
-- **Concert stage** – sing with a synth band (pop / soft / drums, or guide tune), karaoke lyrics, crowd reacts to her voice, auto-recorded with applause, saved on the phone, one tap to send to family.
-- **Ask Teacher** – AI explains tricky words (uses the Cloudflare worker proxy).
+- **Course**: 6 grades with 5 classes each. Each class mixes breathing (the mic checks her "sss"), warm-up notes, Do Re Mi pitch (a live pitch meter), rhythm (she claps and the mic checks her timing), diction (speech recognition) and songs. Every grade ends with an exam and a printable certificate.
+- **Ms. Melody**: introduces each exercise out loud, gives specific feedback after it (flat or sharp, early or late, short breath, unclear words) and writes an AI note at the end of class.
+- **Practice room**: a scale ladder (Do Re Mi / Sa Re Ga), her own songs (Listen → Echo → Fill → Memory) and practice tunes.
+- **Concert stage**: opens after the daily star goal. She sings with a band, the app records it, and she can send it to family.
 
-Grown-ups corner: ⚙️ (answer a maths question).
-
-Runs fully in the browser; data stays on the device. Best in Chrome (Android) or Safari (iPhone).
+Everything runs in the browser and data stays on the device. Best in Chrome (Android) or Safari (iPhone).

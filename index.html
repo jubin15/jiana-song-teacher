@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
-<meta name="theme-color" content="#6b3fa0"/>
+<meta name="theme-color" content="#7a1f2b"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-title" content="Song Teacher"/>
+<meta name="apple-mobile-web-app-title" content="Music School"/>
 <link rel="apple-touch-icon" href="icon-192.png"/>
 <link rel="icon" href="icon-192.png"/>
 <link rel="manifest" href="manifest.json"/>
-<title>Jiana's Song Teacher</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<title>Jiana's Music School</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600;1,9..144,700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg0:#f5f2fa;--bg1:#fff;--bg2:#ede8f5;--bg3:#e2daf0;
-  --acc:#6b3fa0;--acc2:#5a3388;--acc3:#3d2260;--pink:#ff5fa2;--sun:#ffc93c;
-  --green:#2eb872;--orange:#ff8a3d;--blue:#3d8bff;
-  --text:#1a0d2e;--text2:#5a4a72;--text3:#a090bc;
+  --bg0:#f8f1e7;--bg1:#fffdf9;--bg2:#f2e7d8;--bg3:#e7d6c0;
+  --acc:#7a1f2b;--acc2:#6a1824;--acc3:#3d0d14;--pink:#d9463b;--sun:#e9a23b;
+  --green:#2f8f5b;--orange:#d9772b;--blue:#2d4a8a;
+  --text:#2a1215;--text2:#6b4a45;--text3:#a88d84;
+  --serif:'Fraunces',Georgia,serif;
   --border:rgba(0,0,0,.08);--r:20px;
   --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
@@ -28,6 +29,63 @@ button{font-family:inherit;cursor:pointer;border:none;}
 .screen{display:none;animation:up .25s ease;}
 .screen.on{display:block;}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* premium */
+.top h1,.party h2,.song-head h2,.exintro h2{font-family:var(--serif);font-weight:700;letter-spacing:-.2px;}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.brand svg{width:48px;height:48px;flex-shrink:0;}
+.brand h1{font-family:var(--serif);font-size:23px;font-weight:700;line-height:1.1;flex:1;}
+.brand small{display:block;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:var(--pink);letter-spacing:.06em;text-transform:uppercase;margin-top:3px;}
+.today{background:var(--acc);color:#fff8ef;border-radius:24px;padding:18px;margin-bottom:12px;position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(122,31,43,.28);}
+.today::after{content:'';position:absolute;right:-50px;top:-50px;width:180px;height:180px;border-radius:50%;border:26px solid rgba(233,162,59,.16);}
+.today .who{display:flex;gap:10px;align-items:center;font-weight:800;position:relative;}
+.today .who svg{width:46px;height:46px;border-radius:50%;flex-shrink:0;border:2px solid var(--sun);}
+.today .who b{font-size:11px;opacity:.75;font-weight:800;display:block;text-transform:uppercase;letter-spacing:.06em;}
+.today h2{font-family:var(--serif);font-weight:700;font-size:28px;margin:14px 0 2px;position:relative;line-height:1.1;}
+.today p{font-size:13px;opacity:.85;font-weight:700;position:relative;}
+.today .tags{display:flex;gap:6px;margin:12px 0 16px;flex-wrap:wrap;position:relative;}
+.today .tags span{background:rgba(255,255,255,.13);padding:5px 10px;border-radius:99px;font-size:12px;font-weight:800;}
+.pill{background:var(--pink);color:#fff;border-radius:99px;padding:14px 24px;font-size:16px;font-weight:900;box-shadow:0 6px 18px rgba(217,70,59,.35);position:relative;transition:transform .12s;}
+.pill:active{transform:scale(.96);}
+.pill.full{width:100%;}
+.stats{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.stat{background:var(--bg1);border-radius:16px;padding:12px;border:1px solid var(--border);}
+.stat b{font-family:var(--serif);font-size:24px;display:block;line-height:1.1;color:var(--acc);}
+.stat small{font-size:10px;font-weight:900;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+.bar{height:6px;border-radius:99px;background:var(--bg2);margin-top:6px;overflow:hidden;}
+.bar i{display:block;height:100%;background:var(--sun);border-radius:99px;}
+.grade{background:var(--bg1);border:1px solid var(--border);border-radius:18px;margin-bottom:10px;overflow:hidden;}
+.grade summary{list-style:none;display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;}
+.grade summary::-webkit-details-marker{display:none;}
+.grade .gnum{width:46px;height:46px;border-radius:14px;background:var(--bg2);color:var(--acc);font-family:var(--serif);font-weight:700;font-size:22px;display:grid;place-items:center;flex-shrink:0;}
+.grade.cur .gnum{background:var(--acc);color:#fff;}
+.grade.done .gnum{background:var(--sun);}
+.grade h4{font-family:var(--serif);font-size:17px;font-weight:700;}
+.grade p{font-size:12px;color:var(--text2);font-weight:700;}
+.grade .cls{padding:0 12px 12px;display:flex;flex-direction:column;gap:6px;}
+.grade .lesson{border-radius:12px;padding:10px 12px;background:var(--bg0);}
+.grade .lesson .num{width:34px;height:34px;font-size:13px;}
+.teach{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;}
+.teach svg{width:50px;height:50px;border-radius:50%;flex-shrink:0;border:2px solid var(--sun);}
+.teach .bub2{background:var(--bg1);border:1px solid var(--border);border-radius:4px 18px 18px 18px;padding:10px 14px;font-weight:700;font-size:14px;line-height:1.45;flex:1;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.teach .bub2 small,.note small{display:block;font-size:10px;color:var(--pink);font-weight:900;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.exintro .ico{font-size:56px;line-height:1;}
+.exintro h2{font-size:28px;}
+.phase{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--acc);}
+.phase-n,.count-n{font-family:var(--serif);font-size:44px;font-weight:700;color:var(--pink);min-height:54px;}
+.breath{width:190px;height:190px;margin:4px auto;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fbe3c9,#e9a23b 70%);transform:scale(.45);box-shadow:0 0 0 12px rgba(233,162,59,.14);}
+.beats{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap;}
+.beats i{width:30px;height:30px;border-radius:50%;border:3px solid var(--acc);transition:transform .08s;}
+.beats i.x{background:var(--acc);}
+.beats i.now{transform:scale(1.4);box-shadow:0 0 0 6px rgba(233,162,59,.45);}
+.beats i.hit{background:var(--green);border-color:var(--green);}
+.beats i.miss{background:var(--bg3);border-color:var(--orange);}
+.report .row2{display:flex;justify-content:space-between;padding:9px 0;border-top:1px dashed var(--bg3);font-weight:800;font-size:14px;}
+.note{background:var(--bg0);border-left:4px solid var(--sun);border-radius:10px;padding:10px 12px;margin-top:10px;font-weight:700;font-size:14px;line-height:1.5;}
+.cert{width:100%;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);margin:10px 0;display:block;}
+.cert-ov{position:fixed;inset:0;z-index:70;background:rgba(42,18,21,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:12px;}
+.cert-ov .cert{max-width:520px;}
+.sec{font-family:var(--serif);text-transform:none;letter-spacing:0;font-size:19px;color:var(--text);font-weight:700;margin:18px 2px 10px;}
 
 /* top */
 .top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -51,7 +109,7 @@ button{font-family:inherit;cursor:pointer;border:none;}
 .reward .em{font-size:34px;}
 .reward h3{font-size:15px;font-weight:900;}
 .reward p{font-size:12px;color:var(--text2);font-weight:600;}
-.reward.open{border:2px solid var(--sun);background:#fff8e1;animation:glow 1.6s infinite;}
+.reward.open{border:2px solid var(--sun);background:#fff6e6;animation:glow 1.6s infinite;}
 @keyframes glow{50%{box-shadow:0 0 0 6px rgba(255,201,60,.25)}}
 .reward .go{margin-left:auto;}
 
@@ -213,21 +271,17 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
 
 <!-- HOME -->
 <section class="screen on" id="home">
-  <div class="top">
-        <h1>Song Teacher 🎤<small>Hi Jiana! Ready to sing?</small></h1>
+  <div class="brand" id="brand">
+    <h1>Jiana's Music School<small>Western Vocal · <span id="h-grade">Grade 1</span></small></h1>
     <button class="icon-btn" onclick="openGrown()" aria-label="Add songs">➕</button>
   </div>
-  <div class="hero">
-    <div class="ring" id="ring"></div>
-    <div>
-      <h2 id="hero-h">Let's earn stars!</h2>
-      <p id="hero-p"></p>
-      <div class="chips" id="hero-chips"></div>
-    </div>
-  </div>
+  <div class="today" id="today"></div>
+  <div class="stats" id="stats"></div>
   <div class="reward" id="reward"></div>
-  <div class="sec">🎼 Voice school · start here</div>
-  <div id="school"></div>
+  <div class="sec">Your course</div>
+  <div id="course"></div>
+  <div class="sec">Practice room</div>
+  <details class="grade"><summary><span class="gnum">🎹</span><div style="flex:1"><h4>Scale ladder</h4><p>Free practice · Do Re Mi / Sa Re Ga</p></div></summary><div class="cls" id="school"></div></details>
   <div class="sec">My songs</div>
   <div class="grid" id="my-songs"></div>
   <div class="sec">Practice tunes · sing on pitch</div>
@@ -252,6 +306,7 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
     <h1 id="p-title">Practice</h1>
   </div>
   <div class="dots" id="p-dots"></div>
+  <div id="p-teacher"></div>
   <div id="p-body"></div>
 </section>
 
@@ -316,32 +371,32 @@ textarea{min-height:200px;resize:vertical;line-height:1.5;}
 /* ════════════ DATA ════════════ */
 const API_URL = 'https://jianaschooltrackercloudflareworkerapiproxydeploy.jubin15.workers.dev';
 const MODELS = ['claude-sonnet-5-5','claude-sonnet-4-20250514'];
-const COLORS = ['#7b3fe4','#ff5fa2','#3d8bff','#2eb872','#ff8a3d','#e0457b','#00a8a8','#8f5cff'];
+const COLORS = ['#7a1f2b','#2d4a8a','#2f6f6a','#b5522c','#5b3a6e','#8a6a1f','#1f5e7a','#9a2f4f'];
 const EMOJIS = ['🎤','🎸','🌟','🦄','🌈','💜','🎧','🦋','🌸','🐱','🚀','👑'];
 
 // Public-domain tunes. "syllable:note" — trailing "-" joins to the next syllable.
 const TUNES = [
-  {id:'t-twinkle',title:'Twinkle Twinkle',artist:'Classic',emoji:'⭐',color:'#3d8bff',tune:[
+  {id:'t-twinkle',title:'Twinkle Twinkle',artist:'Classic',emoji:'⭐',color:'#2d4a8a',tune:[
     'Twin-:C4 kle:C4 twin-:G4 kle:G4 lit-:A4 tle:A4 star,:G4',
     'how:F4 I:F4 won-:E4 der:E4 what:D4 you:D4 are:C4',
     'Up:G4 a-:G4 bove:F4 the:F4 world:E4 so:E4 high,:D4',
     'like:G4 a:G4 dia-:F4 mond:F4 in:E4 the:E4 sky:D4']},
-  {id:'t-bday',title:'Happy Birthday',artist:'Classic',emoji:'🎂',color:'#ff5fa2',tune:[
+  {id:'t-bday',title:'Happy Birthday',artist:'Classic',emoji:'🎂',color:'#9a2f4f',tune:[
     'Hap-:G4 py:G4 birth-:A4 day:G4 to:C5 you:B4',
     'Hap-:G4 py:G4 birth-:A4 day:G4 to:D5 you:C5',
     'Hap-:G4 py:G4 birth-:G5 day:E5 dear:C5 Ji-:C5 a-:B4 na:A4',
     'Hap-:F5 py:F5 birth-:E5 day:C5 to:D5 you:C5']},
-  {id:'t-row',title:'Row Your Boat',artist:'Classic',emoji:'🚣',color:'#00a8a8',tune:[
+  {id:'t-row',title:'Row Your Boat',artist:'Classic',emoji:'🚣',color:'#2f6f6a',tune:[
     'Row,:C4 row,:C4 row:C4 your:D4 boat:E4',
     'gent-:E4 ly:D4 down:E4 the:F4 stream:G4',
     'Mer-:C5 ri-:C5 ly,:C5 mer-:G4 ri-:G4 ly,:G4 mer-:E4 ri-:E4 ly,:E4 mer-:C4 ri-:C4 ly,:C4',
     'life:G4 is:F4 but:E4 a:D4 dream:C4']},
-  {id:'t-john',title:'Are You Sleeping?',artist:'Classic',emoji:'🔔',color:'#ff8a3d',tune:[
+  {id:'t-john',title:'Are You Sleeping?',artist:'Classic',emoji:'🔔',color:'#b5522c',tune:[
     'Are:C4 you:D4 sleep-:E4 ing,:C4 are:C4 you:D4 sleep-:E4 ing,:C4',
     'Bro-:E4 ther:F4 John,:G4 Bro-:E4 ther:F4 John?:G4',
     'Morn-:G4 ing:A4 bells:G4 are:F4 ring-:E4 ing,:C4 morn-:G4 ing:A4 bells:G4 are:F4 ring-:E4 ing,:C4',
     'Ding:C4 dang:G3 dong,:C4 ding:C4 dang:G3 dong:C4']},
-  {id:'t-mary',title:'Mary Had a Little Lamb',artist:'Classic',emoji:'🐑',color:'#2eb872',tune:[
+  {id:'t-mary',title:'Mary Had a Little Lamb',artist:'Classic',emoji:'🐑',color:'#5b3a6e',tune:[
     'Ma-:E4 ry:D4 had:C4 a:D4 lit-:E4 tle:E4 lamb,:E4',
     'lit-:D4 tle:D4 lamb,:D4 lit-:E4 tle:G4 lamb,:G4',
     'Ma-:E4 ry:D4 had:C4 a:D4 lit-:E4 tle:E4 lamb,:E4',
@@ -380,7 +435,7 @@ let D = load();
 function load(){
   let d={};
   try{d=JSON.parse(localStorage.getItem('jiana-songs-v1'))||{};}catch(e){}
-  return Object.assign({songs:[],prog:{},days:{},goal:15,voice:'',sa:60,names:'sa'},d);
+  return Object.assign({songs:[],prog:{},days:{},goal:15,voice:'',sa:60,names:'do',course:{},certs:[],tv:true},d);
 }
 function save(){try{localStorage.setItem('jiana-songs-v1',JSON.stringify(D));}catch(e){}}
 const today=()=>new Date().toLocaleDateString('en-CA');
@@ -410,13 +465,10 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 
 /* ════════════ HOME ════════════ */
 function renderHome(){
-  const d=day(),pct=Math.min(1,d.stars/D.goal),C=2*Math.PI*38;
-  document.getElementById('ring').innerHTML=`<svg width="86" height="86"><circle cx="43" cy="43" r="38" stroke="rgba(255,255,255,.25)" stroke-width="9" fill="none"/><circle cx="43" cy="43" r="38" stroke="#ffc93c" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" style="transition:stroke-dashoffset .6s"/></svg><b><div>${d.stars}<span>of ${D.goal} ⭐</span></div></b>`;
-  const left=Math.max(0,D.goal-d.stars);
-  document.getElementById('hero-h').textContent=goalMet()?'Superstar day! 🌟':d.stars?'Keep going!':'Let\'s earn stars!';
-  document.getElementById('hero-p').textContent=goalMet()?'You finished today\'s practice.':`${left} more star${left===1?'':'s'} to open the concert stage`;
-  const mins=Math.round(d.secs/60),st=streak();
-  document.getElementById('hero-chips').innerHTML=`<span class="chip">🔥 ${st} day streak</span><span class="chip">⏱ ${mins} min today</span>`;
+  const d=day(),pct=Math.min(1,d.stars/D.goal),mins=Math.round(d.secs/60),st=streak();
+  if(!document.querySelector('#brand svg'))document.getElementById('brand').insertAdjacentHTML('afterbegin',LOGO);
+  renderCourse();
+  document.getElementById('stats').innerHTML=`<div class="stat"><small>Today's stars</small><b>${d.stars}<span style="font-size:14px;color:var(--text3)"> / ${D.goal}</span></b><div class="bar"><i style="width:${pct*100}%"></i></div></div><div class="stat"><small>Streak</small><b>${st}🔥</b></div><div class="stat"><small>Minutes</small><b>${mins}</b></div>`;
   const rw=document.getElementById('reward');
   if(goalMet()){rw.className='reward open';rw.innerHTML=`<div class="em">🎤</div><div><h3>Concert stage is open!</h3><p>Sing with a band, record it, send to family</p></div><button class="btn btn-sun btn-sm go" onclick="openConcert()">Go!</button>`;}
   else{rw.className='reward';rw.innerHTML=`<div class="em">🔒</div><div><h3>Concert stage</h3><p>Opens when you earn ${D.goal} stars today</p></div>`;}
@@ -440,7 +492,7 @@ function noteName(m){return ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B
 /* Find my Sa — she hums, we pick her comfy home note */
 async function findSa(){
   stopAll();cur={id:'sa',lessonIdx:-1,lines:[]};
-  document.getElementById('p-title').textContent='🎹 Find my Sa';go('practice');document.getElementById('p-dots').innerHTML='';
+  document.getElementById('p-teacher').innerHTML='';document.getElementById('p-title').textContent='🎹 Find my Sa';go('practice');document.getElementById('p-dots').innerHTML='';
   document.getElementById('p-body').innerHTML=`<div class="stage"><div class="teacher">Take a breath and sing a long, comfy <b>"Aaaaa"</b> — not too high, not too low.</div><div class="hold"><i id="hold"></i></div><div class="lyric" id="sa-res" style="font-size:20px"></div><button class="btn btn-pink" id="sa-go">🎤 Start</button></div>`;
   document.getElementById('sa-go').onclick=async()=>{
     try{await startMic();}catch(e){toast('Microphone blocked — please allow it 🎤',4000);return;}
@@ -576,13 +628,13 @@ const starsFor=p=>p>=.85?3:p>=.6?2:p>=.3?1:0;
 /* ════════════ PRACTICE (lyrics) ════════════ */
 let P=null,tick=null;
 function startTimer(){clearInterval(tick);tick=setInterval(()=>{if(document.hidden)return;day().secs++;if(day().secs%10===0)save();},1000);}
-function exitPractice(){stopAll();clearInterval(tick);save();if(cur.lessonIdx!=null)go('home');else openSong(cur.id);}
+function exitPractice(){if(CL){CL=null;stopAll();clearInterval(tick);save();document.getElementById('p-teacher').innerHTML='';go('home');return;}document.getElementById('p-teacher').innerHTML='';stopAll();clearInterval(tick);save();if(cur.lessonIdx!=null)go('home');else openSong(cur.id);}
 function startLesson(i){if(!lessonOpen(i)){toast('🔒 Finish the lesson before this one first!');return;}cur=lessonSong(i);startTune();}
-function stopAll(){try{speechSynthesis.cancel();}catch(e){}if(rec){const r=rec;rec=null;try{r.abort();}catch(e){}}stopMic();stopTune();}
+function stopAll(){stopEx();try{speechSynthesis.cancel();}catch(e){}if(rec){const r=rec;rec=null;try{r.abort();}catch(e){}}stopMic();stopTune();}
 
 function startMode(k){
   P={mode:k,i:0,got:[]};startTimer();
-  document.getElementById('p-title').textContent=MODES.find(m=>m.k===k).em+' '+MODES.find(m=>m.k===k).t;
+  if(!CL){document.getElementById('p-title').textContent=MODES.find(m=>m.k===k).em+' '+MODES.find(m=>m.k===k).t;document.getElementById('p-teacher').innerHTML='';}
   go('practice');
   if(k==='listen')return renderListen();
   renderLine();
@@ -666,6 +718,7 @@ function grade(t){
   const pct=pool.length?pool.filter(x=>x.r).length/pool.length:0;
   let s=starsFor(pct);if(P.mode==='memory'&&P.peeked&&s>2)s=2;
   document.getElementById('lyric').innerHTML=lineHTML(line,{hide:P.hide,res});
+  if(t){P.missed=P.missed||[];line.split(/\s+/).forEach((w,k)=>{const c=w.replace(/[^\w']/g,'');if(!res[k]&&c&&!P.missed.includes(c))P.missed.push(c);});}
   if(!t){document.getElementById('heard').textContent='I couldn\'t hear you — try a bit louder 🙂';return;}
   showStars(s);
 }
@@ -675,6 +728,7 @@ function showStars(s){
   document.getElementById('stars').innerHTML=[0,1,2].map(k=>`<span class="s" style="animation-delay:${k*.12}s">${k<s?'⭐':'☆'}</span>`).join('');
   const msg=s===3?CHEERS[Math.random()*CHEERS.length|0]:s===2?'So close! One more try for 3 stars?':s===1?'Good start! Hear it again and retry.':'Let\'s listen once more!';
   document.getElementById('heard').textContent=msg;
+  P.best=P.best||{};P.best[P.i]=Math.max(P.best[P.i]||0,s);
   if(s>0){award(cur.id,P.mode,P.i,s);P.got[P.i]=true;renderDots(cur.lines.length,P.i,P.got);}
   if(s===3){chime();if(P.mode!=='echo')document.getElementById('lyric').innerHTML=lineHTML(line,{res:line.split(/\s+/).map(()=>true)});}
   if(s>=2)document.getElementById('next-btn').classList.replace('btn-p','btn-ok');
@@ -683,6 +737,7 @@ function nextLine(back){stopAll();P.peeked=false;
   if(back){P.i=Math.max(0,P.i-1);renderLine();return;}
   if(P.i<cur.lines.length-1){P.i++;renderLine();}else celebrate();}
 function celebrate(){
+  if(CL){classStepDone({stars:Object.values(P.best||{}).reduce((a,b)=>a+b,0),max:cur.lines.length*3,missed:P.missed||[]});return;}
   stopAll();const m=P.mode,st=modeStars(cur.id,m),max=cur.lines.length*3;
   const next=MODES[MODES.findIndex(x=>x.k===m)+1];
   document.getElementById('p-dots').innerHTML='';
@@ -741,7 +796,8 @@ function pitch(){ // autocorrelation
 let T=null,raf=0;
 async function startTune(){
   stopAll();startTimer();
-  T={line:0,k:0,hold:0,need:cur.hold||350,last:performance.now(),lineStart:performance.now(),miss:0,got:[]};
+  if(!CL)document.getElementById('p-teacher').innerHTML='';
+  T={run:0,dSum:0,dN:0,line:0,k:0,hold:0,need:cur.hold||350,last:performance.now(),lineStart:performance.now(),miss:0,got:[]};
   document.getElementById('p-title').textContent=cur.lessonIdx!=null?`${cur.emoji} Lesson ${cur.lessonIdx+1}: ${cur.title}`:'🎯 Sing on the note';
   go('practice');
   document.getElementById('p-body').innerHTML=`<div class="stage"><div class="teacher">🎤 Tap start and allow the microphone</div><button class="btn btn-pink" onclick="beginTune()">Start singing</button><p class="hint">Sing in any comfy voice — high or low both count. Use headphones for best results.</p></div>`;
@@ -774,7 +830,7 @@ function advanceSyl(){
   markBub(-1);
   const secs=(performance.now()-T.lineStart)/1000/syl.length;
   let s=3;if(secs>3+T.need/1000)s--;if(T.miss>=2)s--;if(T.miss>=syl.length)s=1;s=Math.max(1,s);
-  award(cur.id,'tune',T.line,s);T.got[T.line]=true;chime();
+  award(cur.id,'tune',T.line,s);T.got[T.line]=true;T.run+=s;chime();
   document.getElementById('stars').innerHTML=[0,1,2].map(k=>`<span class="s" style="animation-delay:${k*.12}s">${k<s?'⭐':'☆'}</span>`).join('');
   document.getElementById('tfb').textContent=s===3?CHEERS[Math.random()*CHEERS.length|0]:'Nice! Next line…';
   T.pause=true;
@@ -783,7 +839,7 @@ function advanceSyl(){
     if(T.line<cur.lines.length-1){T.line++;renderTuneLine();}
     else{stopMic();P={mode:'tune'};celebrateTune();}},1600);
 }
-function celebrateTune(){const st=modeStars(cur.id,'tune'),max=cur.lines.length*3;document.getElementById('p-dots').innerHTML='';
+function celebrateTune(){if(CL){classStepDone({stars:T.run,max:cur.lines.length*3,d:T.dN?T.dSum/T.dN:0,dN:T.dN});return;}const st=modeStars(cur.id,'tune'),max=cur.lines.length*3;document.getElementById('p-dots').innerHTML='';
   if(cur.lessonIdx!=null){const i=cur.lessonIdx,ok=lessonDone(i),nx=i+1<LESSONS.length;
     document.getElementById('p-body').innerHTML=`<div class="party"><div class="big">${ok?'🏅':'💪'}</div><h2>${ok?'Lesson '+(i+1)+' passed!':'Good try!'}</h2><p>⭐ ${st} of ${max}. ${ok?'':'Get '+LESSONS[i].l.length*2+' stars to open the next lesson.'}</p><div style="margin-top:20px;display:grid;gap:10px">
     ${ok&&nx?`<button class="btn btn-p full" onclick="startLesson(${i+1})">Next: ${LESSONS[i+1].em} ${LESSONS[i+1].t}</button>`:''}
@@ -804,7 +860,7 @@ function loop(){
   const good=Math.abs(diff)<1;
   ball.classList.toggle('good',good);
   if(good){T.hold+=dt;fb.textContent='Perfect! Hold it… ✨';}
-  else{T.hold=Math.max(0,T.hold-dt);fb.textContent=diff<0?'A little higher ⬆':'A little lower ⬇';if(Math.abs(diff)>3)T.miss+=dt/4000;}
+  else{T.hold=Math.max(0,T.hold-dt);if(Math.abs(diff)<3.5){T.dSum+=diff;T.dN++;}fb.textContent=diff<0?'A little higher ⬆':'A little lower ⬇';if(Math.abs(diff)>3)T.miss+=dt/4000;}
   hold.style.width=Math.min(100,T.hold/T.need*100)+'%';
   if(T.hold>=T.need)advanceSyl();
 }
@@ -968,7 +1024,277 @@ const idbAll=()=>idbTx('readonly',s=>s.getAll());
 const idbDel=id=>idbTx('readwrite',s=>s.delete(id));
 async function idbTrim(n){const all=(await idbAll()).sort((a,b)=>b.id.localeCompare(a.id));for(const c of all.slice(n))await idbDel(c.id);}
 
-function confetti(){const e=['🎉','⭐','🎵','💜','🌟','🎶'];for(let i=0;i<28;i++){const c=document.createElement('div');c.className='confetti';c.textContent=e[i%e.length];c.style.left=Math.random()*100+'vw';c.style.animationDuration=(1.8+Math.random()*1.6)+'s';c.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4200);}}
+function confetti(){const e=['🎉','⭐','🎵','🎓','🌟','🎶'];for(let i=0;i<28;i++){const c=document.createElement('div');c.className='confetti';c.textContent=e[i%e.length];c.style.left=Math.random()*100+'vw';c.style.animationDuration=(1.8+Math.random()*1.6)+'s';c.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4200);}}
+
+/* ════════════ WESTERN VOCAL COURSE ════════════ */
+const B=(i,h,o,reps=2)=>({t:'breath',in:i,hold:h,out:o,reps});
+const H=(notes,secs)=>({t:'hold',lines:notes,hold:secs*1000});
+const Pt=(...lines)=>({t:'pitch',lines});
+const R=(bpm,...pats)=>({t:'rhythm',bpm,pats});
+const Dn=(...lines)=>({t:'diction',lines});
+const Tn=(id,n)=>({t:'tune',id,n});
+const MY={t:'mysong'};
+const COURSE=[
+ {name:'Little Voice',d:'Breathing, first notes, steady beat',classes:[
+  {title:'Hello, voice!',ex:[B(3,2,6),H(['S','S','S'],1),R(70,'xxxxxxxx'),Dn('Mee may mah moh moo','Hello hello, how are you')]},
+  {title:'Do Re Mi',ex:[B(3,2,7),Pt('S R','S R G','G R S'),R(70,'x.x.x.x.'),Dn('Red lorry, yellow lorry')]},
+  {title:'Up to So',ex:[B(4,2,8),Pt('S R G M','S R G M P','P M G R S'),R(72,'xx.xxx.x'),Dn('She sells sea shells by the sea shore')]},
+  {title:'My first song',ex:[H(['S','G','P'],1.2),R(72,'xxx.xxx.'),Tn('t-twinkle',2)]},
+  {title:'Grade 1 exam',exam:1,ex:[B(4,2,10),Pt('S R G M P M G R S'),R(75,'x.xxx.xx'),Tn('t-twinkle')]}]},
+ {name:'Steady Singer',d:'The full scale, long notes, clear words',classes:[
+  {title:'The full ladder',ex:[B(4,2,10),Pt('S R G M','P D N T','S R G M P D N T'),R(76,'xxxxxxxx','xx.xxx..')]},
+  {title:'Coming down',ex:[H(['T','P','S'],1.5),Pt('T N D P','M G R S','T N D P M G R S'),Dn('Unique New York, unique New York')]},
+  {title:'Long and strong',ex:[B(4,3,12),H(['S','G','P','T'],2),R(80,'x.x.xx.x')]},
+  {title:'Singing in rounds',ex:[Pt('S R G M P D N T','T N D P M G R S'),Dn('Betty bought a bit of butter'),Tn('t-john')]},
+  {title:'Grade 2 exam',exam:1,ex:[B(4,3,12),Pt('S R G M P D N T','T N D P M G R S'),R(80,'xx.x.xx.'),Tn('t-row')]}]},
+ {name:'Melody Maker',d:'Patterns, skips and jumps',classes:[
+  {title:'Steps of three',ex:[Pt('S R G','R G M','G M P','M P D','P D N','D N T'),R(84,'x.xx.xxx')]},
+  {title:'Skipping notes',ex:[B(5,2,12),Pt('S G','R M','G P','M D','P N','D T'),Dn('Peter Piper picked a peck of pickled peppers')]},
+  {title:'Big jumps',ex:[H(['S','P','T'],1.5),Pt('S G P','S P T','T P G S'),R(86,'xx..xx.x')]},
+  {title:'Little lamb',ex:[Dn('A big black bug bit a big black bear'),Tn('t-mary')]},
+  {title:'Grade 3 exam',exam:1,ex:[B(5,3,14),Pt('S R G','R G M','G M P','S G P T','T P G S'),R(88,'x.xx.x.x'),Tn('t-mary')]}]},
+ {name:'Breath & Power',d:'Bigger breaths, arpeggios, long phrases',classes:[
+  {title:'Big breath',ex:[B(5,3,15,3),H(['S','G','P'],2.5)]},
+  {title:'Arpeggios',ex:[Pt('S G P T','T P G S','R M D','D M R'),R(90,'xx.xx.xx')]},
+  {title:'Long phrases',ex:[B(5,2,16),Pt('S R G M P D N T N D P M G R S'),Dn('Whether the weather is warm, whether the weather is hot')]},
+  {title:'Birthday star',ex:[R(92,'x.x.xx.x'),Tn('t-bday')]},
+  {title:'Grade 4 exam',exam:1,ex:[B(5,3,16),H(['S','P','T'],3),Pt('S G P T','T P G S'),Tn('t-bday')]}]},
+ {name:'Stage Star',d:'Tricky patterns, wide leaps, pro diction',classes:[
+  {title:'Patterns',ex:[Pt('S R S R G','R G R G M','G M G M P','M P M P D'),R(96,'xx.x.xx.')]},
+  {title:'Wide leaps',ex:[H(['S','T'],2),Pt('S T','R N','S P','G T')]},
+  {title:'Diction pro',ex:[Dn('Six slippery snails slid slowly seaward','I scream, you scream, we all scream for ice cream'),R(100,'x.xxx.xx')]},
+  {title:'Song medley',ex:[Tn('t-john'),Tn('t-twinkle')]},
+  {title:'Grade 5 exam',exam:1,ex:[B(5,3,18),Pt('S R S R G','S G P T','T P G S'),R(100,'xx.xx.x.'),Tn('t-row')]}]},
+ {name:'Song Artist',d:'Full warm-up routine and your own songs',classes:[
+  {title:'Full warm-up',ex:[B(5,3,18),H(['S','G','P','T'],2.5),Pt('S R G M P D N T','T N D P M G R S')]},
+  {title:'Rhythm master',ex:[R(104,'x.xx.xx.','xx.x.xxx','.xx.xx.x')]},
+  {title:'Your song',ex:[MY,Dn('Many mumbling mice are making midnight music in the moonlight')]},
+  {title:'Performance prep',ex:[Tn('t-bday'),Tn('t-mary')]},
+  {title:'Final exam',exam:1,ex:[B(6,3,20),Pt('S R G M P D N T','T N D P M G R S','S G P T'),R(108,'x.xx.x.x'),Tn('t-twinkle'),MY]}]},
+];
+const EXINFO={
+  breath:{ico:'🌬️',name:'Breathing',say:e=>`Singers sing on their breath. Breathe in through your nose for ${e.in}, hold for ${e.hold}, then let it out with a long, steady "sssss" for ${e.out}. Keep your shoulders down!`},
+  hold:{ico:'🎯',name:'Warm-up notes',say:e=>`Let's warm up your voice. Listen to each note, then sing it on "ooo" and hold it steady — like drawing a straight line.`},
+  pitch:{ico:'🎼',name:'Do Re Mi',say:e=>`Time for Do Re Mi. Listen, then match each note. Watch the ball and keep it in the green zone.`},
+  rhythm:{ico:'👏',name:'Rhythm',say:e=>`Rhythm time! I'll count one, two, three, four. Then clap on the filled circles, and stay quiet on the empty ones.`},
+  diction:{ico:'👄',name:'Diction',say:e=>`Great singers have clear words. Listen to me, then say it back — make every sound crisp.`},
+  tune:{ico:'🎵',name:'Song',say:e=>`Song time! Sing every note of ${getSong(e.id).title} and hold it until it turns green.`},
+  mysong:{ico:'🎤',name:'Your song',say:e=>D.songs.length?`Now your own song, ${D.songs[0].title}! Listen to each line and sing it back.`:`Add your favourite song with the plus button and we'll practise it here. For now, a fun tongue twister!`},
+};
+const ckey=(g,c)=>`g${g}c${c}`;
+const flat=()=>COURSE.flatMap((G,g)=>G.classes.map((_,c)=>[g,c]));
+const classPassed=(g,c)=>!!(D.course[ckey(g,c)]||{}).passed;
+function classOpen(g,c){if(D.allOpen)return true;const f=flat(),i=f.findIndex(([a,b])=>a===g&&b===c);return i===0||classPassed(...f[i-1]);}
+function nextClass(){return flat().find(([g,c])=>!classPassed(g,c))||[COURSE.length-1,COURSE[COURSE.length-1].classes.length-1];}
+const gradeDone=g=>COURSE[g].classes.every((_,c)=>classPassed(g,c));
+const exMins=e=>e.t==='breath'?Math.ceil(e.reps*(e.in+e.hold+e.out)/60)+1:e.t==='rhythm'?e.pats.length:2;
+
+const LOGO=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#7a1f2b"/><circle cx="24" cy="24" r="19.5" fill="none" stroke="#e9a23b" stroke-width="1.2" stroke-dasharray="1.6 2.2"/><circle cx="24" cy="24" r="14" fill="#d9463b"/><path d="M26.5 14.5v13.8a4.6 4.6 0 1 1-2.6-4.1V14.5z" fill="#fff"/><path d="M26.5 14.5l6 2.6v3.2l-6-2.6z" fill="#fff"/></svg>`;
+const TEACHER=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="#f3d9b5"/><path d="M13 44c0-17 7-29 19-29s19 12 19 29v20H13z" fill="#3d0d14"/><path d="M19 64c2-9 7-13 13-13s11 4 13 13z" fill="#2d4a8a"/><rect x="28" y="42" width="8" height="10" rx="3" fill="#c98b6b"/><ellipse cx="32" cy="33" rx="12" ry="13.5" fill="#d79c79"/><path d="M19.5 31c1-10 7-15 12.5-15s11.5 5 12.5 15c-4-5-8-8-12.5-8s-8.5 3-12.5 8z" fill="#3d0d14"/><circle cx="27.5" cy="34" r="1.6" fill="#2a1215"/><circle cx="36.5" cy="34" r="1.6" fill="#2a1215"/><path d="M28 39.5q4 3.5 8 0" stroke="#7a1f2b" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="24" cy="37.5" r="1.8" fill="#e9a23b" opacity=".5"/><circle cx="40" cy="37.5" r="1.8" fill="#e9a23b" opacity=".5"/></svg>`;
+
+function teacherSay(text,label){
+  const el=document.getElementById('p-teacher');if(!el)return;
+  el.innerHTML=`<div class="teach">${TEACHER}<div class="bub2"><small>${esc(label||'Ms. Melody')}</small>${esc(text)}</div><button class="icon-btn" style="width:34px;height:34px;font-size:14px" onclick="D.tv=!D.tv;save();this.textContent=D.tv?'🔈':'🔇';if(!D.tv)speechSynthesis.cancel()">${D.tv===false?'🔇':'🔈'}</button></div>`;
+  if(D.tv!==false)speak(text,{rate:.95});
+}
+
+/* class runner */
+let CL=null;
+function startClass(g,c){
+  if(!classOpen(g,c)){toast('🔒 Pass the class before this one first!');return;}
+  stopAll();CL={g,c,ei:0,res:[]};startTimer();go('practice');classIntro();
+}
+const clsObj=()=>COURSE[CL.g].classes[CL.c];
+const curEx=()=>clsObj().ex[CL.ei];
+function classIntro(){
+  const cls=clsObj(),ex=curEx(),info=EXINFO[ex.t],n=cls.ex.length;
+  document.getElementById('p-title').textContent=`Grade ${CL.g+1} · ${cls.title}`;
+  document.getElementById('p-dots').innerHTML=cls.ex.map((_,j)=>`<i class="${j===CL.ei?'cur':CL.res[j]?'done':''}"></i>`).join('');
+  teacherSay(info.say(ex),`Step ${CL.ei+1} of ${n} · ${info.name}`);
+  document.getElementById('p-body').innerHTML=`<div class="stage exintro"><div class="ico">${info.ico}</div><h2>${info.name}</h2>${exPreview(ex)}<button class="pill" onclick="runEx()">Start ▶</button></div>`;
+}
+function exPreview(ex){
+  const lbl=k=>SW[k][2];
+  if(ex.t==='breath')return `<p class="hint">In ${ex.in}s · hold ${ex.hold}s · “sss” ${ex.out}s · × ${ex.reps}</p>`;
+  if(ex.t==='hold'||ex.t==='pitch')return `<p class="hint">${ex.lines.map(l=>l.split(' ').map(lbl).join(' ')).join(' · ')}</p>`;
+  if(ex.t==='rhythm')return `<div class="beats">${ex.pats[0].replace(/ /g,'').split('').map(c=>`<i class="${c==='x'?'x':''}"></i>`).join('')}</div><p class="hint">${ex.bpm} beats per minute</p>`;
+  if(ex.t==='diction')return `<p class="hint">“${esc(ex.lines[0])}”</p>`;
+  if(ex.t==='tune')return `<p class="hint">${esc(getSong(ex.id).title)}</p>`;
+  return '';
+}
+function solf(id,title,lines,hold){
+  const sa=D.sa||60,syl=lines.map(l=>l.split(' ').map(k=>({s:SW[k][2],sub:SW[k][1],m:sa+SW[k][0]})));
+  return {id,title,emoji:'🎼',hold,syl,lines:syl.map(l=>l.map(x=>x.s).join(' '))};
+}
+function runEx(){
+  const ex=curEx(),id=`C-${ckey(CL.g,CL.c)}-${CL.ei}`;
+  const sing=()=>{const title=document.getElementById('p-title').textContent;startTune();document.getElementById('p-title').textContent=title;beginTune();};
+  if(ex.t==='breath')return startBreath(ex,id);
+  if(ex.t==='rhythm')return startRhythm(ex,id);
+  if(ex.t==='hold'||ex.t==='pitch'){cur=solf(id,EXINFO[ex.t].name,ex.lines,ex.hold);return sing();}
+  if(ex.t==='tune'){const s=getSong(ex.id);cur=Object.assign({},s,ex.n?{syl:s.syl.slice(0,ex.n),lines:s.lines.slice(0,ex.n)}:{});return sing();}
+  if(ex.t==='diction'){cur={id,title:'Diction',lines:ex.lines};return startMode('echo',true);}
+  if(ex.t==='mysong'){const s=D.songs[0];cur=s?Object.assign({},s,{lines:s.lines.slice(0,4)}):{id,title:'Tongue twister',lines:['Fresh fried fish, fish fresh fried']};return startMode('echo',true);}
+}
+function feedback(ex,r){
+  const q=r.max?r.stars/r.max:0;
+  let a=q>=.85?['Excellent work!','Beautiful!','Wonderful, Jiana!'][Math.random()*3|0]:q>=.6?'Good work.':'Nice try — practice makes perfect.';
+  let tip='';
+  if(r.d!=null&&r.dN>20){tip=r.d<-.5?'You were often a little low — that is called flat. Lift your eyebrows and think "up" as you sing.':r.d>.5?'You were often a little high — that is called sharp. Relax your jaw and sing a bit softer.':'Your notes are landing right in the middle. Lovely pitch!';}
+  else if(r.err!=null){tip=r.extra>1?'Stay very still on the empty circles — silence is part of rhythm too.':r.err<-70?'You clapped a little early. Wait for the beat to come to you.':r.err>70?'You were a little late. Feel the beat inside and clap with it.':'Your timing is right on the beat!';}
+  else if(r.cover!=null){tip=r.cover<.75?'Your "sss" ran out early. Breathe deep into your tummy, not your shoulders, and let the air out slowly.':'Lovely, steady breath. That is what holds long notes up!';}
+  else if(r.missed&&r.missed.length){tip=`Make "${r.missed.slice(0,2).join('" and "')}" extra clear next time.`;}
+  return (a+' '+tip).trim();
+}
+function classStepDone(r){
+  stopAll();
+  const ex=curEx(),prev=CL.res[CL.ei],q=r.max?r.stars/r.max:0;
+  if(!prev||q>prev.stars/prev.max)CL.res[CL.ei]=r;
+  const s3=Math.round(q*3);
+  document.getElementById('p-dots').innerHTML=clsObj().ex.map((_,j)=>`<i class="${j===CL.ei?'cur':CL.res[j]?'done':''}"></i>`).join('');
+  teacherSay(feedback(ex,r),'Ms. Melody says');
+  if(s3===3)chime();
+  const last=CL.ei>=clsObj().ex.length-1;
+  document.getElementById('p-body').innerHTML=`<div class="stage"><div class="stars">${[0,1,2].map(k=>`<span class="s" style="animation-delay:${k*.12}s">${k<s3?'⭐':'☆'}</span>`).join('')}</div><p class="hint">${r.stars} of ${r.max} points</p>
+   <div class="row"><button class="btn btn-g" onclick="runEx()">🔁 Try again</button><button class="btn btn-p" onclick="classNext()">${last?'Finish class ✓':'Next ▶'}</button></div></div>`;
+}
+function classNext(){stopAll();CL.ei++;if(CL.ei<clsObj().ex.length)classIntro();else classEnd();}
+function classEnd(){
+  const cls=clsObj(),tot=CL.res.reduce((a,r)=>a+(r?r.stars:0),0),max=cls.ex.reduce((a,_,j)=>a+(CL.res[j]?CL.res[j].max:3),0);
+  const q=max?tot/max:0,passed=q>=.6,k=ckey(CL.g,CL.c),old=D.course[k]||{};
+  D.course[k]={best:Math.max(old.best||0,Math.round(q*100)),passed:old.passed||passed,date:today()};
+  let cert=false;if(passed&&cls.exam&&!D.certs.find(x=>x.g===CL.g)){D.certs.push({g:CL.g,date:new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})});cert=true;}
+  save();
+  const nx=nextClass(),g=CL.g,c=CL.c;
+  const lines=cls.ex.map((e,j)=>{const r=CL.res[j],s=r?Math.round(r.stars/r.max*3):0;return `<div class="row2"><span>${EXINFO[e.t].ico} ${EXINFO[e.t].name}</span><span>${'⭐'.repeat(s)}${'☆'.repeat(3-s)}</span></div>`;}).join('');
+  document.getElementById('p-dots').innerHTML='';
+  teacherSay(passed?(cls.exam?`Congratulations! You passed Grade ${g+1}. I am so proud of you!`:'Class complete! Great work today.'):'Good effort! Practise once more to pass this class — you need 60%.','Class report');
+  document.getElementById('p-body').innerHTML=`<div class="card report"><h3 style="font-family:Fraunces,serif;font-size:20px">${esc(cls.title)} — ${Math.round(q*100)}% ${passed?'✅':''}</h3>${lines}
+   <div class="note" id="ai-note"><small>Ms. Melody's note</small><span class="hint">Writing your note…</span></div></div>
+   ${cert?`<div class="card" style="text-align:center"><h3>🎓 Your Grade ${g+1} certificate!</h3><img class="cert" id="cert-img" alt="Certificate"/><button class="btn btn-ok full" onclick="shareCert(${g})">📤 Share certificate</button></div>`:''}
+   <div style="display:grid;gap:10px">${passed&&!(nx[0]===g&&nx[1]===c)?`<button class="pill full" onclick="startClass(${nx[0]},${nx[1]})">Next class: ${esc(COURSE[nx[0]].classes[nx[1]].title)} ▶</button>`:''}
+   <button class="btn btn-g full" onclick="startClass(${g},${c})">🔁 Repeat this class</button><button class="btn btn-g full" onclick="exitPractice()">Home</button></div>`;
+  if(cert)makeCert(g).then(cv=>{const im=document.getElementById('cert-img');if(im)im.src=cv.toDataURL('image/png');});
+  if(passed)confetti();
+  aiNote(cls,q);
+}
+async function aiNote(cls,q){
+  const summary=cls.ex.map((e,j)=>{const r=CL&&CL.res[j];return `${EXINFO[e.t].name}: ${r?Math.round(r.stars/r.max*100)+'%':'skipped'} — ${r?feedback(e,r):''}`;}).join('\n');
+  const fallback=q>=.85?'Superb class! Your breath and pitch are getting stronger every day. Keep practising a little every day and you will shine.':q>=.6?'Well done today. Pick the exercise with the fewest stars and do it once more tomorrow — that is how real singers improve.':'Every singer starts here. Repeat this class tomorrow, go slowly, and listen carefully before you sing.';
+  const set=t=>{const el=document.getElementById('ai-note');if(el)el.innerHTML=`<small>Ms. Melody's note</small>${esc(t)}`;};
+  const ctl=new AbortController();setTimeout(()=>ctl.abort(),9000);
+  for(const model of MODELS){
+    try{const r=await fetch(API_URL,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({model,max_tokens:200,messages:[{role:'user',content:`You are Ms. Melody, a warm, encouraging Western vocal teacher for Jiana, a 9-year-old girl. She just finished the class "${cls.title}" (score ${Math.round(q*100)}%). Results:\n${summary}\n\nWrite her a note of at most 45 words: one specific praise and one specific, practical tip for tomorrow. Simple words, no emojis, no greeting line, plain text only.`}]})});
+      const d=await r.json();if(d.content){set(d.content.map(c=>c.text||'').join('').trim());return;}
+    }catch(e){break;}
+  }
+  set(fallback);
+}
+
+/* breathing coach */
+let EX=null;
+function stopEx(){if(EX){EX.stop=true;(EX.timers||[]).forEach(clearTimeout);cancelAnimationFrame(EX.raf);EX=null;}}
+function rmsNow(){const b=mic.buf;mic.an.getFloatTimeDomainData(b);let r=0;for(const v of b)r+=v*v;return Math.sqrt(r/b.length);}
+async function startBreath(ex,id){
+  stopAll();let hasMic=true;try{await startMic();}catch(e){hasMic=false;}
+  EX={timers:[],cover:[]};const E=EX;
+  document.getElementById('p-body').innerHTML=`<div class="stage"><div class="phase" id="ph">Get ready…</div><div class="breath" id="bc"></div><div class="phase-n" id="pn"></div><div class="hold"><i id="hold"></i></div><p class="hint" id="bhint">Rep 1 of ${ex.reps}</p></div>`;
+  const bc=document.getElementById('bc');
+  const phase=(label,secs,scale,cb)=>{document.getElementById('ph').textContent=label;bc.style.transition=`transform ${secs}s ease-in-out`;bc.style.transform=`scale(${scale})`;
+    let n=secs;document.getElementById('pn').textContent=n;const iv=setInterval(()=>{n--;const el=document.getElementById('pn');if(el&&n>0)el.textContent=n;},1000);
+    E.timers.push(setTimeout(()=>{clearInterval(iv);cb();},secs*1000));E.timers.push(iv);};
+  const rep=k=>{if(E.stop)return;document.getElementById('bhint').textContent=`Rep ${k+1} of ${ex.reps}`;
+    phase('Breathe in… 👃',ex.in,1,()=>phase('Hold…',ex.hold,1,()=>{
+      let on=0,tot=0,last=performance.now();
+      const tick=()=>{if(E.stop)return;const now=performance.now(),dt=now-last;last=now;tot+=dt;
+        const lvl=hasMic?rmsNow():.05;if(lvl>.01)on+=dt;const h=document.getElementById('hold');if(h)h.style.width=Math.min(100,on/(ex.out*1000)*100)+'%';E.raf=requestAnimationFrame(tick);};
+      tick();
+      phase('Sssss… slowly 🐍',ex.out,.45,()=>{cancelAnimationFrame(E.raf);E.cover.push(Math.min(1,on/(ex.out*1000)));
+        if(k+1<ex.reps)E.timers.push(setTimeout(()=>rep(k+1),900));else done();});}));};
+  const done=()=>{stopMic();const cov=E.cover.reduce((a,b)=>a+b,0)/E.cover.length;const s=hasMic?(cov>=.8?3:cov>=.55?2:1):2;
+    award(id,'breath',0,s);EX=null;
+    if(CL)classStepDone({stars:s,max:3,cover:hasMic?cov:null});};
+  E.timers.push(setTimeout(()=>rep(0),1500));
+}
+
+/* rhythm coach */
+async function startRhythm(ex,id){
+  stopAll();let hasMic=true;try{await startMic();}catch(e){hasMic=false;}
+  EX={timers:[]};const E=EX,Bms=60000/ex.bpm;let pi=0,total=0,maxT=0,errs=[],extras=0;
+  const runPat=()=>{if(E.stop)return;
+    const pat=ex.pats[pi].replace(/ /g,'').split('');
+    document.getElementById('p-body').innerHTML=`<div class="stage"><div class="phase" id="ph">Listen: 1 · 2 · 3 · 4</div><div class="count-n" id="cn"></div><div class="beats" id="bt">${pat.map(c=>`<i class="${c==='x'?'x':''}"></i>`).join('')}</div><p class="hint">Pattern ${pi+1} of ${ex.pats.length} · clap on the filled circles</p></div>`;
+    // noise floor
+    let floor=.01,fl=[];const t0=performance.now()+700,start=t0+Bms*4,end=start+Bms*pat.length;
+    for(let k=0;k<4;k++)E.timers.push(setTimeout(()=>{tone(k===0?88:81,.08,0,.2);const c=document.getElementById('cn');if(c)c.textContent=k+1;},t0-performance.now()+k*Bms));
+    pat.forEach((_,k)=>E.timers.push(setTimeout(()=>{const c=document.getElementById('cn');if(c)c.textContent=k===0?'👏':'';if(k===0){const ph=document.getElementById('ph');if(ph)ph.textContent='Now clap! 👏';}const is=document.querySelectorAll('#bt i');is.forEach((e,j)=>e.classList.toggle('now',j===k));},start-performance.now()+k*Bms)));
+    const onsets=[];let armed=true,lastOn=0;
+    const tick=()=>{if(E.stop||!hasMic)return;const now=performance.now(),l=rmsNow();
+      if(now<t0)fl.push(l);else if(fl.length){floor=Math.max(.008,fl.sort((a,b)=>a-b)[fl.length>>1]);fl=[];}
+      const thr=Math.max(.05,floor*5);
+      if(now>start-Bms*.5&&now<end){if(armed&&l>thr&&now-lastOn>130){onsets.push(now-70);lastOn=now;armed=false;}if(l<thr*.5)armed=true;}
+      E.raf=requestAnimationFrame(tick);};
+    tick();
+    E.timers.push(setTimeout(()=>{cancelAnimationFrame(E.raf);
+      const exp=pat.map((c,k)=>c==='x'?start+k*Bms:null),used=new Set(),is=document.querySelectorAll('#bt i');let hits=0,n=0;
+      exp.forEach((t,k)=>{is[k]&&is[k].classList.remove('now');if(t==null)return;n++;let bi=-1,bd=1e9;onsets.forEach((o,j)=>{const d=Math.abs(o-t);if(!used.has(j)&&d<bd){bd=d;bi=j;}});
+        if(bi>=0&&bd<Math.min(220,Bms*.4)){used.add(bi);hits++;errs.push(onsets[bi]-t);is[k].classList.add('hit');}else is[k]&&is[k].classList.add('miss');});
+      const ex2=onsets.length-used.size;extras+=ex2;
+      const acc=hasMic?Math.max(0,(hits-ex2*.5)/n):.67;const s=acc>=.85?3:acc>=.6?2:acc>=.3?1:0;
+      if(s)award(id,'rhythm',pi,s);total+=s;maxT+=3;
+      document.getElementById('ph').textContent=hasMic?`${hits} of ${n} claps on the beat${ex2?` · ${ex2} extra`:''}`:'No mic — great clapping anyway!';
+      pi++;E.timers.push(setTimeout(()=>{if(pi<ex.pats.length)runPat();else{stopMic();EX=null;const err=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:0;if(CL)classStepDone({stars:total,max:maxT,err:hasMic?err:null,extra:extras});}},1800));
+    },end-performance.now()+Bms*.5));
+  };
+  runPat();
+}
+
+/* home: course */
+function renderCourse(){
+  const [ng,nc]=nextClass(),cls=COURSE[ng].classes[nc],mins=cls.ex.reduce((a,e)=>a+exMins(e),0);
+  document.getElementById('h-grade').textContent=`Grade ${ng+1}`;
+  document.getElementById('today').innerHTML=`<div class="who">${TEACHER}<div><b>Today's class with</b>Ms. Melody</div></div>
+    <h2>${esc(cls.title)}</h2><p>Grade ${ng+1} · ${COURSE[ng].name}${cls.exam?' · 🎓 Exam':''}</p>
+    <div class="tags"><span>⏱ ~${mins} min</span>${[...new Set(cls.ex.map(e=>EXINFO[e.t].ico+' '+EXINFO[e.t].name))].map(t=>`<span>${t}</span>`).join('')}</div>
+    <button class="pill" onclick="startClass(${ng},${nc})">Start class ▶</button>`;
+  document.getElementById('course').innerHTML=COURSE.map((G,g)=>{const nd=G.classes.filter((_,c)=>classPassed(g,c)).length,done=gradeDone(g),isCur=g===ng;
+    return `<details class="grade ${done?'done':isCur?'cur':''}" ${isCur?'open':''}><summary><span class="gnum">${done?'🎓':g+1}</span><div style="flex:1"><h4>Grade ${g+1} · ${G.name}</h4><p>${G.d} · ${nd}/${G.classes.length}</p></div>${done?`<button class="btn btn-sun btn-sm" onclick="event.preventDefault();viewCert(${g})">Certificate</button>`:''}</summary>
+    <div class="cls">${G.classes.map((C,c)=>{const p=classPassed(g,c),o=classOpen(g,c),b=(D.course[ckey(g,c)]||{}).best;
+      return `<button class="lesson ${p?'done':g===ng&&c===nc?'next':''} ${o?'':'locked'}" onclick="startClass(${g},${c})"><span class="num">${p?'✓':o?(C.exam?'🎓':c+1):'🔒'}</span><div><h4>${esc(C.title)}</h4><p>${C.ex.map(e=>EXINFO[e.t].ico).join(' ')}</p></div>${b?`<span class="st">${b}%</span>`:''}</button>`;}).join('')}</div></details>`;}).join('');
+}
+
+/* certificate */
+function makeCert(g){
+  const cv=document.createElement('canvas');cv.width=1400;cv.height=1000;const x=cv.getContext('2d');
+  const draw=()=>{
+    x.fillStyle='#fbf5ec';x.fillRect(0,0,1400,1000);
+    x.strokeStyle='#7a1f2b';x.lineWidth=18;x.strokeRect(30,30,1340,940);
+    x.strokeStyle='#e9a23b';x.lineWidth=3;x.strokeRect(62,62,1276,876);
+    x.textAlign='center';x.fillStyle='#d9463b';x.font='800 30px Nunito, sans-serif';x.fillText("JIANA'S MUSIC SCHOOL · WESTERN VOCAL",700,160);
+    x.fillStyle='#2a1215';x.font='700 84px Fraunces, Georgia, serif';x.fillText('Certificate of Achievement',700,270);
+    x.fillStyle='#6b4a45';x.font='600 34px Nunito, sans-serif';x.fillText('This is proudly presented to',700,360);
+    x.fillStyle='#7a1f2b';x.font='italic 700 120px Fraunces, Georgia, serif';x.fillText('Jiana',700,500);
+    x.fillStyle='#e9a23b';x.fillRect(470,530,460,4);
+    x.fillStyle='#2a1215';x.font='600 36px Nunito, sans-serif';x.fillText(`for successfully completing Grade ${g+1} — ${COURSE[g].name}`,700,610);
+    const c=D.certs.find(z=>z.g===g);x.fillStyle='#6b4a45';x.font='600 30px Nunito, sans-serif';x.fillText(c?c.date:'',700,665);
+    // seal
+    x.save();x.translate(700,800);x.fillStyle='#d9463b';x.beginPath();for(let i=0;i<24;i++){const a=i/24*Math.PI*2,r=i%2?78:92;x.lineTo(Math.cos(a)*r,Math.sin(a)*r);}x.closePath();x.fill();
+    x.fillStyle='#7a1f2b';x.beginPath();x.arc(0,0,66,0,Math.PI*2);x.fill();x.fillStyle='#fff';x.font='700 54px Fraunces, Georgia, serif';x.fillText(`G${g+1}`,0,18);x.restore();
+    x.fillStyle='#2a1215';x.font='italic 600 40px Fraunces, Georgia, serif';x.fillText('Ms. Melody',1080,820);x.fillStyle='#6b4a45';x.fillRect(930,840,300,2);x.font='600 24px Nunito, sans-serif';x.fillText('Vocal teacher',1080,875);
+    x.font='600 24px Nunito, sans-serif';x.fillText('♪ ♫ ♪',320,830);
+    return cv;};
+  return (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(draw);
+}
+async function viewCert(g){
+  const cv=await makeCert(g),ov=document.createElement('div');ov.className='cert-ov';
+  ov.innerHTML=`<img class="cert" src="${cv.toDataURL('image/png')}" alt="Certificate"/><div class="row" style="width:100%;max-width:520px"><button class="btn btn-g" onclick="this.closest('.cert-ov').remove()">Close</button><button class="btn btn-ok" onclick="shareCert(${g})">📤 Share</button></div>`;
+  document.body.appendChild(ov);
+}
+async function shareCert(g){
+  const cv=await makeCert(g),blob=await new Promise(r=>cv.toBlob(r,'image/png')),f=new File([blob],`Jiana - Grade ${g+1} certificate.png`,{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'Jiana\'s certificate 🎓'});return;}catch(e){if(e.name==='AbortError')return;}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();
+}
 
 /* ════════════ GROWN-UPS ════════════ */
 function gate(){const a=11+(Math.random()*8|0),b=12+(Math.random()*7|0);const r=prompt(`Grown-ups only 🙂\nWhat is ${a} × ${b}?`);return r!==null&&+r===a*b;}
